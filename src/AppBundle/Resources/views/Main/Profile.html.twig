@@ -5,8 +5,56 @@
 
 {% block body %}
 
+    <div class="parallax-container valign-wrapper" style="height: 400px;">
+        <div class="parallax"><img src="{{ asset('images/' ~ user.backgroundImage|default('animal') ~'.jpg') }}"></div>
+        <div class="valign center-block center-align">
+            <h1>{{user.name|default(user.email)}}</h1>
+        </div>
+    </div>
 
-        profil po přihlášení
 
+    <div class="container">
+        <h4 class="center-align">Údaje</h4>
+        <div class="row">
+            <table class="col s12 m4 offset-m4 table-second-column-bold bordered highlight">
+                <tr>
+                    <td>Jméno</td>
+                    <td>{{user.name}}</td>
+                </tr>
+                <tr>
+                    <td>E-mail</td>
+                    <td>{{user.email}}</td>
+                </tr>
+                <tr>
+                    <td>Fakturační adresa</td>
+                    <td>{{user.adress1}}</td>
+                </tr>
+                <tr>
+                    <td>Dodací adresa</td>
+                    <td>{{user.adress2}}</td>
+                </tr>
+                <tr>
+                    <td>IČO</td>
+                    <td>{{user.ico}}</td>
+                </tr>
+                <tr>
+                    <td>DIČ</td>
+                    <td>{{user.dic}}</td>
+                </tr>
+                <tr>
+                    <td>Telefon</td>
+                    <td>{{user.phone}}</td>
+                </tr>
+
+            </table>   
+        </div>
+    </div>
+
+
+    <script>
+        $(function () {
+            $('.parallax').parallax();
+        });
+    </script>
 
 {% endblock %}

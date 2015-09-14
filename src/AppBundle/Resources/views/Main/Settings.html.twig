@@ -1,0 +1,66 @@
+{% extends "AppBundle::base.html.twig" %}
+
+
+{% block title %}iFarm - pro moderní farmáře{% endblock %}
+
+{% block body %}
+
+    <h1 class="center-align">Nastavení profilu</h1>
+
+    <div class="row">
+        <form class="col s12 m6 offset-m3" method="POST" action="{{url('main_settings')}}">
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">account_circle</i>
+                    <input placeholder="Vložte vaše jméno a příjmení" id="name" type="text" name="name" value="{{user.name}}">
+                    <label for="name">Jméno a přijmení</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">room</i>
+                    <input placeholder="Vložte celou adresu včetně města a PSČ" id="adress1" type="text" name="adress1" value="{{user.adress1}}">
+                    <label for="adress1">Fakturační adresa</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">room</i>
+                    <input placeholder="Vložte celou adresu včetně města a PSČ" id="adress2" type="text" name="adress2" value="{{user.adress2}}">
+                    <label for="adress2">Dodací adresa</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">phone</i>
+                    <input placeholder="Vložte telefon" id="phone" type="text" name="phone" value="{{user.phone}}">
+                    <label for="phone">Telefon</label>
+                </div>
+            </div>
+
+            <div class="row"  >
+                <div class="input-field col s12 m6 tooltipped" data-position="left" data-delay="50" data-tooltip="IČO je neměnné">
+                    <i class="material-icons prefix">assignment_ind</i>
+                    <input disabled id="ico" type="text" name="ico" value="{{user.ico}}">
+                    <label for="ico">IČO</label>
+                </div>
+                    
+                <div class="input-field col s12 m6">
+                    <i class="material-icons prefix">assignment_ind</i>
+                    <input placeholder="Vložte váš DIČ" id="dic" type="text" name="dic" value="{{user.dic}}">
+                    <label for="dic">DIČ</label>
+                </div>
+            </div>
+
+
+            <button class="btn waves-effect waves-light right" type="submit" name="action">Uložit změny
+                <i class="material-icons right">done</i>
+            </button>
+        </form>
+    </div>
+
+
+{% endblock %}

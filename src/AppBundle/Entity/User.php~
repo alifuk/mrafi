@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * User
@@ -10,8 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity
  */
-class User
-{
+class User implements UserInterface {
+
     /**
      * @var integer
      *
@@ -38,35 +40,35 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="adress1", type="string", length=255)
+     * @ORM\Column(name="adress1", type="string", length=255, nullable=true)
      */
     private $adress1;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="adress2", type="string", length=255)
+     * @ORM\Column(name="adress2", type="string", length=255, nullable=true)
      */
     private $adress2;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="phone", type="string", length=20)
+     * @ORM\Column(name="phone", type="string", length=20, nullable=true)
      */
     private $phone;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
-     * @ORM\Column(name="date", type="datetime")
+     * @ORM\Column(name="date", type="datetime", nullable=true)
      */
     private $date;
 
@@ -80,32 +82,51 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="dic", type="string", length=20)
+     * @ORM\Column(name="dic", type="string", length=20, nullable=true)
      */
     private $dic;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="lat", type="string", length=20)
+     * @ORM\Column(name="lat", type="string", length=20, nullable=true)
      */
     private $lat;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="lng", type="string", length=20)
+     * @ORM\Column(name="lng", type="string", length=20, nullable=true)
      */
     private $lng;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="backgroundImage", type="string", length=20, nullable=true)
+     */
+    private $backgroundImage;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="profileImage", type="string", length=20, nullable=true)
+     */
+    private $profileImage;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="salt", type="string", length=32, nullable=false)
+     */
+    private $salt;
 
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -115,8 +136,7 @@ class User
      * @param string $email
      * @return User
      */
-    public function setEmail($email)
-    {
+    public function setEmail($email) {
         $this->email = $email;
 
         return $this;
@@ -127,8 +147,7 @@ class User
      *
      * @return string 
      */
-    public function getEmail()
-    {
+    public function getEmail() {
         return $this->email;
     }
 
@@ -138,8 +157,7 @@ class User
      * @param string $password
      * @return User
      */
-    public function setPassword($password)
-    {
+    public function setPassword($password) {
         $this->password = $password;
 
         return $this;
@@ -150,8 +168,7 @@ class User
      *
      * @return string 
      */
-    public function getPassword()
-    {
+    public function getPassword() {
         return $this->password;
     }
 
@@ -161,8 +178,7 @@ class User
      * @param string $name
      * @return User
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
 
         return $this;
@@ -173,8 +189,7 @@ class User
      *
      * @return string 
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
@@ -184,8 +199,7 @@ class User
      * @param string $adress1
      * @return User
      */
-    public function setAdress1($adress1)
-    {
+    public function setAdress1($adress1) {
         $this->adress1 = $adress1;
 
         return $this;
@@ -196,8 +210,7 @@ class User
      *
      * @return string 
      */
-    public function getAdress1()
-    {
+    public function getAdress1() {
         return $this->adress1;
     }
 
@@ -207,8 +220,7 @@ class User
      * @param string $adress2
      * @return User
      */
-    public function setAdress2($adress2)
-    {
+    public function setAdress2($adress2) {
         $this->adress2 = $adress2;
 
         return $this;
@@ -219,8 +231,7 @@ class User
      *
      * @return string 
      */
-    public function getAdress2()
-    {
+    public function getAdress2() {
         return $this->adress2;
     }
 
@@ -230,8 +241,7 @@ class User
      * @param string $phone
      * @return User
      */
-    public function setPhone($phone)
-    {
+    public function setPhone($phone) {
         $this->phone = $phone;
 
         return $this;
@@ -242,19 +252,17 @@ class User
      *
      * @return string 
      */
-    public function getPhone()
-    {
+    public function getPhone() {
         return $this->phone;
     }
 
     /**
      * Set date
      *
-     * @param \DateTime $date
+     * @param DateTime $date
      * @return User
      */
-    public function setDate($date)
-    {
+    public function setDate($date) {
         $this->date = $date;
 
         return $this;
@@ -263,10 +271,9 @@ class User
     /**
      * Get date
      *
-     * @return \DateTime 
+     * @return DateTime 
      */
-    public function getDate()
-    {
+    public function getDate() {
         return $this->date;
     }
 
@@ -276,8 +283,7 @@ class User
      * @param string $ico
      * @return User
      */
-    public function setIco($ico)
-    {
+    public function setIco($ico) {
         $this->ico = $ico;
 
         return $this;
@@ -288,8 +294,7 @@ class User
      *
      * @return string 
      */
-    public function getIco()
-    {
+    public function getIco() {
         return $this->ico;
     }
 
@@ -299,8 +304,7 @@ class User
      * @param string $dic
      * @return User
      */
-    public function setDic($dic)
-    {
+    public function setDic($dic) {
         $this->dic = $dic;
 
         return $this;
@@ -311,8 +315,7 @@ class User
      *
      * @return string 
      */
-    public function getDic()
-    {
+    public function getDic() {
         return $this->dic;
     }
 
@@ -322,8 +325,7 @@ class User
      * @param string $lat
      * @return User
      */
-    public function setLat($lat)
-    {
+    public function setLat($lat) {
         $this->lat = $lat;
 
         return $this;
@@ -334,8 +336,7 @@ class User
      *
      * @return string 
      */
-    public function getLat()
-    {
+    public function getLat() {
         return $this->lat;
     }
 
@@ -345,8 +346,7 @@ class User
      * @param string $lng
      * @return User
      */
-    public function setLng($lng)
-    {
+    public function setLng($lng) {
         $this->lng = $lng;
 
         return $this;
@@ -357,8 +357,86 @@ class User
      *
      * @return string 
      */
-    public function getLng()
-    {
+    public function getLng() {
         return $this->lng;
     }
+
+    /**
+     * Set backgroundImage
+     *
+     * @param string $backgroundImage
+     * @return User
+     */
+    public function setBackgroundImage($backgroundImage) {
+        $this->backgroundImage = $backgroundImage;
+
+        return $this;
+    }
+
+    /**
+     * Get backgroundImage
+     *
+     * @return string 
+     */
+    public function getBackgroundImage() {
+        return $this->backgroundImage;
+    }
+
+    public function eraseCredentials() {
+        
+    }
+
+    public function getRoles() {
+        return array('ROLE_USER');
+    }
+
+    public function getSalt() {
+        return;
+    }
+
+    public function getUsername() {
+        return $this->email;
+    }
+
+    public function serialize() {
+        return serialize(array(
+            $this->id,
+            $this->name,
+            $this->password,
+                // see section on salt below
+                // $this->salt,
+        ));
+    }
+
+    public function unserialize($serialized) {
+        list (
+                $this->id,
+                $this->name,
+                $this->password,
+                // see section on salt below
+                // $this->salt
+                ) = unserialize($serialized);
+    }
+
+    /**
+     * Set profileImage
+     *
+     * @param string $profileImage
+     * @return User
+     */
+    public function setProfileImage($profileImage) {
+        $this->profileImage = $profileImage;
+
+        return $this;
+    }
+
+    /**
+     * Get profileImage
+     *
+     * @return string 
+     */
+    public function getProfileImage() {
+        return $this->profileImage;
+    }
+
 }

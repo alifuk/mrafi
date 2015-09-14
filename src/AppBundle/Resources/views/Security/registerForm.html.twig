@@ -1,5 +1,24 @@
-<div class="form_dropdown form_register center-block center-align z-depth-2">
-    {{ form_start(form_register) }}
-    {{ form_widget(form_register) }}
-    {{ form_end(form_register) }}           
-</div>
+
+<form action="{{ path('user_register') }}" method="post" class="form_dropdown form_register center-block center-align z-depth-2">
+    <div class="input-field col s12">
+        <input type="text" id="email" name="email" />
+        <label for="email">Email:</label>
+    </div>
+
+    <div class="input-field col s12">
+        <input type="password" id="password" name="password" />
+        <label for="password">Heslo:</label>
+    </div>
+
+    <div class="input-field col s12">
+        <input type="password" id="ico" name="ico" />
+        <label for="ico">Ičo:</label>
+    </div>
+
+    <button class="btn waves-effect waves-light" type="submit" name="action">Registrovat
+        <i class="material-icons right">send</i>
+    </button>
+
+
+</form>
+

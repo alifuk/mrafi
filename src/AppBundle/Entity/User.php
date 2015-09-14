@@ -101,6 +101,21 @@ class User implements UserInterface {
     private $lng;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="backgroundImage", type="string", length=20, nullable=true)
+     */
+    private $backgroundImage;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="profileImage", type="string", length=20, nullable=true)
+     */
+    private $profileImage;
+
+
+    /**
      * Get id
      *
      * @return integer 
@@ -340,6 +355,27 @@ class User implements UserInterface {
         return $this->lng;
     }
 
+    /**
+     * Set backgroundImage
+     *
+     * @param string $backgroundImage
+     * @return User
+     */
+    public function setBackgroundImage($backgroundImage) {
+        $this->backgroundImage = $backgroundImage;
+
+        return $this;
+    }
+
+    /**
+     * Get backgroundImage
+     *
+     * @return string 
+     */
+    public function getBackgroundImage() {
+        return $this->backgroundImage;
+    }
+
     public function eraseCredentials() {
         
     }
@@ -349,7 +385,7 @@ class User implements UserInterface {
     }
 
     public function getSalt() {
-        return;
+        return md5(uniqid());
     }
 
     public function getUsername() {
@@ -374,6 +410,27 @@ class User implements UserInterface {
                 // see section on salt below
                 // $this->salt
                 ) = unserialize($serialized);
+    }
+
+    /**
+     * Set profileImage
+     *
+     * @param string $profileImage
+     * @return User
+     */
+    public function setProfileImage($profileImage) {
+        $this->profileImage = $profileImage;
+
+        return $this;
+    }
+
+    /**
+     * Get profileImage
+     *
+     * @return string 
+     */
+    public function getProfileImage() {
+        return $this->profileImage;
     }
 
 }

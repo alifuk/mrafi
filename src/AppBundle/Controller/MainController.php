@@ -18,8 +18,6 @@ class MainController extends Controller {
      * @Template()
      */
     public function landingPageAction() {
-
-        
         $task = new User();
         $task->setPhone("606 544 258");
 
@@ -42,39 +40,77 @@ class MainController extends Controller {
         ];
     }
 
-
-        
-    
     /**
-     * @Route("/profile", name="main_profile")
+     * @Route("/profil/{id}", name="main_profil" )
      * @Security("has_role('ROLE_USER')")
      * @Template()
      */
-    public function profileAction() {
-        return [];
+    public function profileAction($id) {
+        $user = $this->getDoctrine()
+                ->getRepository('AppBundle:User')
+                ->find($id);
+
+        return ['user' => $user];
     }
-    
 
     /**
      * @Route("/settings", name="main_settings")
+     * @Security("has_role('ROLE_USER')")
      * @Template()
      */
-    public function nastaveniAction() {
+    public function settingsAction(Request $request) {
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getDoctrine()
+                ->getRepository('AppBundle:User')
+                ->find($user->getId());
+
+        dump($request);
+
+        if ($request->isMethod('POST')) {
+            dump("jop");
+            $name = $request->request->get('name');
+            $adress1 = $request->request->get('adress1');
+            $adress2 = $request->request->get('adress2');
+            $phone = $request->request->get('phone');
+            $dic = $request->request->get('dic');
+
+            $user->setName($name);
+            $user->setAdress1($adress1);
+            $user->setAdress2($adress2);
+            $user->setPhone($phone);
+            $user->setDic($dic);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+        }
+
+        return ['user' => $user];
+    }
+
+    /**
+     * @Route("/demand", name="main_demand")
+     * @Security("has_role('ROLE_USER')")
+     * @Template()
+     */
+    public function demandAction(Request $request) {
+
+        $myDemands = $this->getDoctrine()
+                ->getRepository('AppBundle:Items')
+                ->getMyDemands();
+
+        return ['user' => $user];
+    }
+
+    /**
+     * @Route("/offer", name="main_offer")
+     * @Security("has_role('ROLE_USER')")
+     * @Template()
+     */
+    public function offerAction(Request $request) {
+
         return [];
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
 }

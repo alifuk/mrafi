@@ -1,5 +1,23 @@
-<div class="form_dropdown form_login center-block center-align z-depth-2">
-    {{ form_start(form_login) }}
-    {{ form_widget(form_login) }}
-    {{ form_end(form_login) }}           
-</div>
+
+
+
+<form action="{{ path('security_login_check') }}" method="post" class="form_dropdown form_login center-block center-align z-depth-2">
+    <div class="input-field col s12">
+        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+        <label for="username">Email:</label>
+    </div>
+
+    <div class="input-field col s12">
+        <input type="password" id="password" name="_password" />
+        <label for="password">Heslo:</label>
+    </div>
+
+    {#
+        If you want to control the URL the user
+        is redirected to on success (more details below)
+        <input type="hidden" name="_target_path" value="/account" />
+    #}
+    <button class="btn waves-effect waves-light" type="submit" name="action">Přihlásit
+        <i class="material-icons right">send</i>
+    </button>
+</form>
