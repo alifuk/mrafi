@@ -1,0 +1,138 @@
+{% extends "AppBundle::base.html.twig" %}
+
+{% block stylesheets %}
+    {% stylesheets '@AppBundle/Resources/less/landingPage.less' %}
+    <link rel="stylesheet" href="{{ asset_url }}">
+    {% endstylesheets %}
+{% endblock %}
+
+
+{% block title %}iFarm - pro moderní farmáře{% endblock %}
+
+{% block body %}
+
+
+    <div class="parallax-container valign-wrapper" style="height: 800px;">
+        <div class="parallax"><img src="{{ asset('images/corn.jpg') }}"></div>
+        <div class="valign center-block center-align">
+            <h1>iFarm</h1>
+            <h3>nakupujte zemědělské vybavení v 21.století</h3>
+
+            <a class="waves-effect waves-light btn-large"><i class="material-icons left">shopping_cart</i>Chci výhodně nakoupit</a>
+        </div>
+
+    </div>
+
+    <div class="z-depth-2">
+
+        <div class="container center-align spaced">
+
+            <div class="row trippie-wrapper">
+
+                <div class="col s4">
+                    <i class="material-icons trippie-icon">contact_phone</i>
+                    <div class="divider"></div>
+                    <div class="trippie-text">Získejte cenné kontakty</div>
+                </div>
+                <div class="col s4">
+                    <i class="material-icons trippie-icon">query_builder</i>
+                    <div class="divider"></div>
+                    <div class="trippie-text">Neztrácejte čas hledáním prodejců</div>
+                </div>
+                <div class="col s4">
+                    <i class="material-icons trippie-icon">visibility</i>
+                    <div class="divider"></div>
+                    <div class="trippie-text">Buďte vidět</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="parallax-container valign-wrapper" style="height: 300px;">
+        <div class="parallax"><img src="{{ asset('images/farming.jpg') }}"></div>
+        <div class="center-block">
+            <h2 class="valign center-align">Vytvořeno zemědělci pro zemědělce</h2>
+        </div>
+
+    </div>    
+        
+        
+        
+        
+<div class="z-depth-2">
+        <div class="container center-align spaced">
+
+            <div class="jakToFunguje-box ">
+
+                <h3 class="center-align">Jak to celé funguje?</h3>
+
+                <div class="row">
+
+                    <div class="col s12 m3">
+                        <i class="material-icons icon">note_add</i>
+                        <div class="text">Přidejte poptávku</div>
+                    </div>
+
+                    <div class="col s12 m3">
+                        <i class="material-icons icon">list</i>
+                        <div class="text">Dostanete nabídky</div>
+                    </div>
+                    <div class="col s12 m3">
+                        <i class="material-icons icon">done</i>
+                        <div class="text">Vyberte tu nejlepší</div>
+                    </div>
+
+                    <div class="col s12 m3">
+                        <i class="material-icons icon">trending_up</i>
+                        <div class="text">Ušetřete</div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div> 
+  
+
+    <div class="parallax-container valign-wrapper"  style="height: 300px;">
+        <div class="parallax"><img src="{{ asset('images/windows.jpg') }}"></div>
+        <h1 class="valign center-block "></h1>
+    </div>
+
+    
+    <div class="z-depth-2">
+        <div class="container center-align spaced">
+
+            <div class="email-box">
+
+                <h4 class="center-align">Každý týden 10 nejlepších zemědělských nabídek zdarma</h4>
+
+                <div class="center-block email-form">
+
+                    <div class="row">
+                        <div class="input-field col s7">
+                            <input  id="first_name" type="text" class="validate">
+                            <label for="first_name">Email</label>
+                        </div>
+                        <div class="col s5">
+                            <a class="waves-effect waves-light btn"><i class="material-icons left">done</i>Dostávat nabídky</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+
+    <script>
+
+        $(function () {
+            $('.parallax').parallax();
+        });
+
+    </script>
+
+
+{% endblock %}

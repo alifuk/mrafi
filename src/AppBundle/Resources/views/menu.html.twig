@@ -1,0 +1,80 @@
+<div class="navbar-fixed">
+    <nav class="white">
+        <div class="nav-wrapper center-block container">
+            {% if is_granted('ROLE_USER') %}
+
+                <ul id="dropdown_user" class="dropdown-content">
+                    <li><a href="#"><i class="material-icons left">settings</i>Nastavení</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{{ path('security_logout') }}"><i class="material-icons left">power_settings_new</i>Odhlásit</a></li>
+                </ul>
+
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="sass.html">O iFarm</a></li>
+                    <li><a href="badges.html">Components</a></li>
+                    <!-- Dropdown Trigger -->
+                    <li><a class="dropdown-button" href="#" data-activates="dropdown_user">{{ app.user.username }}<i class="material-icons right">arrow_drop_down</i></a></li>
+                </ul>
+
+            {% else %}  
+
+                <a href="#!" class="brand-logo">iFarm.cz</a>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="sass.html">Projekt iFarm</a></li>
+                    <li><a href="#ukazka">Ukázka z praxe</a></li>
+                    <li><a href="#jak-to-funguje">Jak to funguje?</a></li>  
+                    <li><a href="badges.html">Kolik to stojí?</a></li>  
+                    <li><a href="badges.html">Vyzkoušet</a></li>   
+                    <li><a href="badges.html">Reference</a></li>   
+                    <li><a href="badges.html">Obchodní podmínky</a></li>  
+                    <li><a href="badges.html">Kontakt</a></li>  
+                    <li class="prihlasit green lighten-2">
+                        <a href="#" >Přihlásit</a>
+
+                    </li>  
+                    <li class="registrovat">
+                        <a href="#">Registrovat</a>                        
+                    </li>      
+                </ul>
+
+            {% endif %}
+
+
+
+        </div>
+    </nav>
+
+
+</div>
+
+{% render(controller("AppBundle:Security:loginForm")) %}
+{% render(controller("AppBundle:Security:registerForm")) %}
+
+
+
+
+
+
+<script>
+
+    var $form_login = $(".form_login");
+    var $form_register = $(".form_register");
+    var $prihlasit = $(".prihlasit");
+    $form_login.hide();
+    $form_register.hide();
+
+
+    $(function () {
+        $prihlasit.click(function () {
+            $form_login.slideToggle();
+        });
+        $(".registrovat").click(function () {
+            $form_register.slideToggle();
+        });
+
+        $(".dropdown-button").dropdown({ hover: true, constrain_width: false, belowOrigin: true });
+
+    });
+
+
+</script>
