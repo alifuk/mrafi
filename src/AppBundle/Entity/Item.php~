@@ -53,14 +53,14 @@ class Item {
      *
      * @ORM\Column(name="deleted", type="boolean")
      */
-    private $deleted;
+    private $deleted = 0;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="public", type="boolean")
      */
-    private $public;
+    private $public = 0;
 
     /**
      * @var DateTime
@@ -215,63 +215,4 @@ class Item {
         return $this->owner;
     }
 
-
-    /**
-     * Set note
-     *
-     * @param string $note
-     * @return Item
-     */
-    public function setNote($note)
-    {
-        $this->note = $note;
-
-        return $this;
-    }
-
-    /**
-     * Get note
-     *
-     * @return string 
-     */
-    public function getNote()
-    {
-        return $this->note;
-    }
-
-    /**
-     * Set dateCreated
-     *
-     * @param \DateTime $dateCreated
-     * @return Item
-     */
-    public function setDateCreated($dateCreated)
-    {
-        $this->dateCreated = $dateCreated;
-
-        return $this;
-    }
-
-    /**
-     * Set category
-     *
-     * @param \AppBundle\Entity\Category $category
-     * @return Item
-     */
-    public function setCategory(\AppBundle\Entity\Category $category)
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    /**
-     * Get category
-     *
-     * @return \AppBundle\Entity\Category 
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
 }

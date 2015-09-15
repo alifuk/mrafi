@@ -5,42 +5,50 @@
 
 {% block body %}
     <div class="container">
-        <h1 class="center-align">Poptávky</h1>
+
+        <div class="row" style="line-height: 130px;">
+            <div class="col s12 m4 offset-m4">
+                <h1 class="center-align">Poptávky</h1>
+            </div>
+            <div class="col s12 m4">
+                <a class="waves-effect waves-light btn-large center-align z-depth-0" href={{url('main_demandCreate')}}>
+                    <i class="material-icons left">add</i>Vytvořit poptávku
+                </a>
+            </div>
 
 
-        <table class="bordered striped highlight">
-            <thead>
-                <tr>
-                    <th data-field="id">Název</th>
-                    <th data-field="id">Kategorie</th>
-                    <th data-field="name">Datum vytvoření</th>
-                    <th data-field="price"></th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for demand in demands %}
+        </div>
+        {% if demands is empty %}
+            <h3 class="center-align">Ještě nemáte vytvořenou poptávku</h3>
+        {% else %}
+            <table class="bordered striped highlight">
+                <thead>
                     <tr>
-                        <td>{{demand.name}}</td>
-                        <td>{{demand.dateCreated|date('Y-m-d')}}</td>
-                        <td>{{demand.category.name}}</td>
-                        <td>$0.87</td>
+                        <th data-field="id">Název</th>
+                        <th data-field="id">Kategorie</th>
+                        <th data-field="name">Datum vytvoření</th>
+                        <th data-field="price">Veřejné</th>
+                        <th data-field="price"></th>
                     </tr>
+                </thead>
 
-                {% endfor %}
+                <tbody>
+                    {% for demand in demands %}
+                        <tr>
+                            <td>{{demand.name}}</td>
+                            <td>{{demand.category.name}}</td>
+                            <td>{{demand.dateCreated|date('Y-m-d')}}</td>
+                            <td>{{demand.public}}</td>
+                            <td><a class="waves-effect waves-red btn-flat"><i class="material-icons right">more_vert</i>Možnosti</a></td>
+                        </tr>
 
-                <tr>
-                    <td>Alan</td>
-                    <td>Jellybean</td>
-                    <td>$3.76</td>
-                </tr>
-                <tr>
-                    <td>Jonathan</td>
-                    <td>Lollipop</td>
-                    <td>$7.00</td>
-                </tr>
-            </tbody>
-        </table>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        {% endif %}
+
+
     </div>
 
 {% endblock %}

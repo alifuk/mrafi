@@ -65,7 +65,6 @@ class MainController extends Controller {
                 ->getRepository('AppBundle:User')
                 ->find($user->getId());
 
-        dump($request);
 
         if ($request->isMethod('POST')) {
             dump("jop");
@@ -105,29 +104,56 @@ class MainController extends Controller {
     }
 
     /**
-     * @Route("/demand-add", name="main_demand_add")
+     * @Route("/demand-create", name="main_demandCreate")
      * @Security("has_role('ROLE_USER')")
      * @Template()
      */
-    public function demandAddAction() {
-        
+    public function demandCreateAction(Request $request) {
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        
-        
-        
-        $demand = new Item();
-        $demand->setName("Example");
-        $demand->setType(Item::TYPE_DEMAND);
-        $demand->setOwner($user);
-        $demand->setPublic(1);
-        $demand->setDeleted(0);
-        
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($demand);
-        $em->flush();
-        
-        
-        return [];
+        $categories = $this->getDoctrine()
+                ->getRepository('AppBundle:Category')
+                ->findAll();
+
+
+        if ($request->isMethod('POST')) {
+            dump("ukladani");
+
+            $name = $request->request->get('name');
+            $public = $request->request->get('public');
+            $note = $request->request->get('note');
+            $category = $request->request->get('category');
+            
+            if(null === $public ){
+                $public = false;
+            } else {
+                $public = true;
+            }
+            dump($request);
+            
+
+            $categoryObj = $this->getDoctrine()
+                    ->getRepository('AppBundle:Category')
+                    ->find($category);
+
+
+            $item = new Item();
+            $item->setName($name);
+            $item->setOwner($user);
+            $item->setType(Item::TYPE_DEMAND);
+            $item->setPublic($public);
+            $item->setCategory($categoryObj);
+            $item->setNote($note);
+            $item->setDeleted(0);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($item);
+            $em->flush();
+
+
+        }
+
+        return ['categories' => $categories];
     }
 
     /**
@@ -139,8 +165,8 @@ class MainController extends Controller {
 
         return [];
     }
-    
-     /**
+
+    /**
      * @Route("/overview", name="main_overview")
      * @Security("has_role('ROLE_USER')")
      * @Template()

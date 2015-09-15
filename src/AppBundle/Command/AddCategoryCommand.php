@@ -184,12 +184,11 @@ class AddCategoryCommand extends ContainerAwareCommand {
         if (empty($urlName)) {
             $urlName = $name;
         }
-        
-        $output->writeln($parentObj->getId());
+        ;
         
         $category->setUrlName($urlName);
         $category->setDescription($description);
-        $category->setParent($parentObj->getId());
+        $category->setParent($parentObj);
 
         $this->em->persist($category);
         $this->em->flush($category);

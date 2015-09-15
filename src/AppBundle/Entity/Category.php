@@ -44,16 +44,28 @@ class Category
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="parent", type="integer", nullable=true)
+     * 
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="childs")
+     * @ORM\JoinColumn(name="parent", referencedColumnName="id", nullable=true)
      */
     private $parent;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Category", mappedBy="parent")
+     **/
+    private $childs;
+    
     
     /**
      * @ORM\OneToMany(targetEntity="Item", mappedBy="category")
      **/
     private $items;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Parameter", mappedBy="category")
+     **/
+    private $parameters;
+    
 
     /**
      * Get id
