@@ -1,0 +1,46 @@
+{% extends "AppBundle::base.html.twig" %}
+
+
+{% block title %}iFarm - pro moderní farmáře{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="center-align">Poptávky</h1>
+
+
+        <table class="bordered striped highlight">
+            <thead>
+                <tr>
+                    <th data-field="id">Název</th>
+                    <th data-field="id">Kategorie</th>
+                    <th data-field="name">Datum vytvoření</th>
+                    <th data-field="price"></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for demand in demands %}
+                    <tr>
+                        <td>{{demand.name}}</td>
+                        <td>{{demand.dateCreated|date('Y-m-d')}}</td>
+                        <td>{{demand.category.name}}</td>
+                        <td>$0.87</td>
+                    </tr>
+
+                {% endfor %}
+
+                <tr>
+                    <td>Alan</td>
+                    <td>Jellybean</td>
+                    <td>$3.76</td>
+                </tr>
+                <tr>
+                    <td>Jonathan</td>
+                    <td>Lollipop</td>
+                    <td>$7.00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

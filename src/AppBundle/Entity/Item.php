@@ -2,16 +2,22 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Item
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="AppBundle\Entity\ItemRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ItemRepository")
+ * @ORM\HasLifecycleCallbacks 
  */
-class Item
-{
+class Item {
+
+    const TYPE_OFFER = 1;
+    const TYPE_DEMAND = 1;
+    const TYPE_AUCTION = 1;
+
     /**
      * @var integer
      *
@@ -40,17 +46,17 @@ class Item
      *
      * @ORM\Column(name="deleted", type="boolean")
      */
-    private $deleted;
+    private $deleted = 0;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="public", type="boolean")
      */
-    private $public;
+    private $public = 0;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="dateCreated", type="datetime")
      */
@@ -58,19 +64,33 @@ class Item
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="owner", type="integer")
+     * 
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="items")
+     * @ORM\JoinColumn(name="owner", referencedColumnName="id", nullable=false)
      */
     private $owner;
+    
+    /**
+     * @var integer
+     * 
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="items")
+     * @ORM\JoinColumn(name="category", referencedColumnName="id", nullable=false)
+     */
+    private $category;
 
+    /**
+     *  @ORM\PrePersist 
+     */
+    public function doStuffOnPrePersist() {
+         $this->dateCreated = new DateTime();
+    }
 
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -80,8 +100,7 @@ class Item
      * @param string $name
      * @return Item
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
 
         return $this;
@@ -92,8 +111,7 @@ class Item
      *
      * @return string 
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
@@ -103,8 +121,7 @@ class Item
      * @param integer $type
      * @return Item
      */
-    public function setType($type)
-    {
+    public function setType($type) {
         $this->type = $type;
 
         return $this;
@@ -115,8 +132,7 @@ class Item
      *
      * @return integer 
      */
-    public function getType()
-    {
+    public function getType() {
         return $this->type;
     }
 
@@ -126,8 +142,7 @@ class Item
      * @param boolean $deleted
      * @return Item
      */
-    public function setDeleted($deleted)
-    {
+    public function setDeleted($deleted) {
         $this->deleted = $deleted;
 
         return $this;
@@ -138,8 +153,7 @@ class Item
      *
      * @return boolean 
      */
-    public function getDeleted()
-    {
+    public function getDeleted() {
         return $this->deleted;
     }
 
@@ -149,8 +163,7 @@ class Item
      * @param boolean $public
      * @return Item
      */
-    public function setPublic($public)
-    {
+    public function setPublic($public) {
         $this->public = $public;
 
         return $this;
@@ -161,19 +174,17 @@ class Item
      *
      * @return boolean 
      */
-    public function getPublic()
-    {
+    public function getPublic() {
         return $this->public;
     }
 
     /**
      * Set dateCreated
      *
-     * @param \DateTime $dateCreated
+     * @param DateTime $dateCreated
      * @return Item
      */
-    public function setDateCreated($dateCreated)
-    {
+    public function setDateCreated($dateCreated) {
         $this->dateCreated = $dateCreated;
 
         return $this;
@@ -182,10 +193,9 @@ class Item
     /**
      * Get dateCreated
      *
-     * @return \DateTime 
+     * @return DateTime 
      */
-    public function getDateCreated()
-    {
+    public function getDateCreated() {
         return $this->dateCreated;
     }
 
@@ -195,8 +205,7 @@ class Item
      * @param integer $owner
      * @return Item
      */
-    public function setOwner($owner)
-    {
+    public function setOwner($owner) {
         $this->owner = $owner;
 
         return $this;
@@ -207,8 +216,8 @@ class Item
      *
      * @return integer 
      */
-    public function getOwner()
-    {
+    public function getOwner() {
         return $this->owner;
     }
+
 }

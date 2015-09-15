@@ -114,6 +114,11 @@ class User implements UserInterface {
      */
     private $profileImage;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Item", mappedBy="owner")
+     **/
+    private $items;
+    
 
     /**
      * Get id

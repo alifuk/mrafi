@@ -31,23 +31,28 @@ class Category
     /**
      * @var string
      *
-     * @ORM\Column(name="url-name", type="string", length=255)
+     * @ORM\Column(name="urlName", type="string", length=255)
      */
-    private $url-name;
+    private $urlName;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="string", length=255)
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
     private $description;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="parent", type="integer")
+     * @ORM\Column(name="parent", type="integer", nullable=true)
      */
     private $parent;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Item", mappedBy="category")
+     **/
+    private $items;
 
 
     /**
@@ -91,7 +96,7 @@ class Category
      */
     public function setUrlName($urlName)
     {
-        $this->url-name = $urlName;
+        $this->urlName = $urlName;
 
         return $this;
     }

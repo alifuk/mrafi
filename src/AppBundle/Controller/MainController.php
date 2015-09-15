@@ -2,14 +2,14 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Item;
 use AppBundle\Entity\User;
-use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Repository;
 
 class MainController extends Controller {
 
@@ -94,13 +94,40 @@ class MainController extends Controller {
      * @Security("has_role('ROLE_USER')")
      * @Template()
      */
-    public function demandAction(Request $request) {
+    public function demandAction() {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $myDemands = $this->getDoctrine()
-                ->getRepository('AppBundle:Items')
-                ->getMyDemands();
+                ->getRepository('AppBundle:Item')
+                ->findOwnedBy($user);
 
-        return ['user' => $user];
+        return ['demands' => $myDemands];
+    }
+
+    /**
+     * @Route("/demand-add", name="main_demand_add")
+     * @Security("has_role('ROLE_USER')")
+     * @Template()
+     */
+    public function demandAddAction() {
+        
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        
+        
+        
+        $demand = new Item();
+        $demand->setName("Example");
+        $demand->setType(Item::TYPE_DEMAND);
+        $demand->setOwner($user);
+        $demand->setPublic(1);
+        $demand->setDeleted(0);
+        
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($demand);
+        $em->flush();
+        
+        
+        return [];
     }
 
     /**
@@ -108,7 +135,17 @@ class MainController extends Controller {
      * @Security("has_role('ROLE_USER')")
      * @Template()
      */
-    public function offerAction(Request $request) {
+    public function offerAction() {
+
+        return [];
+    }
+    
+     /**
+     * @Route("/overview", name="main_overview")
+     * @Security("has_role('ROLE_USER')")
+     * @Template()
+     */
+    public function overviewAction() {
 
         return [];
     }
