@@ -21,7 +21,7 @@ class MainController extends Controller {
         $task = new User();
         $task->setPhone("606 544 258");
 
-        $formRegister = $this->createFormBuilder($task, ['action' => $this->generateUrl('user_register')])
+        $formRegister = $this->createFormBuilder($task, ['action' => $this->generateUrl('security_register')])
                 ->add('email', 'text')
                 ->add('password', 'text')
                 ->add('ico', 'text')
@@ -123,14 +123,14 @@ class MainController extends Controller {
             $public = $request->request->get('public');
             $note = $request->request->get('note');
             $category = $request->request->get('category');
-            
-            if(null === $public ){
+
+            if (null === $public) {
                 $public = false;
             } else {
                 $public = true;
             }
             dump($request);
-            
+
 
             $categoryObj = $this->getDoctrine()
                     ->getRepository('AppBundle:Category')
@@ -149,8 +149,10 @@ class MainController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->persist($item);
             $em->flush();
-
-
+            
+            
+            $this->addFlash('success', 'Poptávka úspěšně vytvořena');
+            return $this->redirect($this->generateUrl('main_demand'));
         }
 
         return ['categories' => $categories];
@@ -174,6 +176,36 @@ class MainController extends Controller {
     public function overviewAction() {
 
         return [];
+    }
+
+    /**
+     * @Route("/menuLiCategories", name="main_menuLiCategories")
+     * @Template()
+     */
+    public function menuLiCategoriesAction() {
+        $categories = $this->getDoctrine()
+                ->getRepository("AppBundle:Category")
+                ->findAll();
+
+        return ['categories' => $categories];
+    }
+
+    /**
+     * @Route("/category/{categoryUrl}", name="main_category")
+     * @Security("has_role('ROLE_USER')")
+     * @Template()
+     */
+    public function categoryAction($categoryUrl) {
+
+        $category = $this->getDoctrine()
+                ->getRepository("AppBundle:Category")
+                ->findOneBy(['urlName' => $categoryUrl]);
+        
+        if (null === $category) {
+            $this->addFlash('error', 'Špatná kategorie!');
+            return $this->redirect($this->generateUrl('main_landingpage'));
+        }
+        return ['category' => $category];
     }
 
 }

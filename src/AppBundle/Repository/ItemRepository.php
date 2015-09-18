@@ -19,8 +19,9 @@ class ItemRepository extends EntityRepository
         return $this
             ->createQueryBuilder('i')
             ->select('i')
-            ->where('i.owner = :owner')->setParameter('owner', $user)
-            ->setMaxResults(7)
+            ->andWhere('i.owner = :owner')->setParameter('owner', $user)
+            ->andWhere('i.deleted = 0')
+            ->setMaxResults(14)
             ->getQuery()
             ->getResult()
         ;

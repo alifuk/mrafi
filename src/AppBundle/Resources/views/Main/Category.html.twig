@@ -1,0 +1,19 @@
+{% extends "AppBundle::base.html.twig" %}
+
+
+{% block title %}iFarm - pro moderní farmáře{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Kategorie</h1>
+        {{category.name}}
+        h2
+        
+        <h2>Poptávky</h2>
+        {% include 'AppBundle::Tables/demandTable.html.twig' %}
+
+
+
+    </div>
+
+{% endblock %}

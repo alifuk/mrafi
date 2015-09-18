@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class SecurityController extends Controller {
 
     /**
-     * @Route("/registerForm", name="user_registerForm")
+     * @Route("/registerForm", name="security_registerForm")
      * @Template()
      */
     public function registerFormAction() {
@@ -23,7 +23,7 @@ class SecurityController extends Controller {
     }
 
     /**
-     * @Route("/register", name="user_register")
+     * @Route("/register", name="security_register")
      * @Method("POST")
      */
     public function registerAction(Request $request) {

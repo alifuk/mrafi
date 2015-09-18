@@ -23,6 +23,14 @@
                     <li><a href="{{ path('security_logout') }}"><i class="material-icons left">power_settings_new</i>Odhlásit</a></li>
                 </ul>
 
+                <ul id="dropdown_kategorie" class="dropdown-content">
+                    {{ render(url("main_menuLiCategories")) }}
+                </ul>
+
+                <ul class="left hide-on-med-and-down">
+                    <li><a class="dropdown-button" href="#" data-activates="dropdown_kategorie">Kategorie<i class="material-icons right">arrow_drop_down</i></a></li>
+                </ul>
+
                 <ul class="right hide-on-med-and-down">
                     <li><a class="dropdown-button" href="#" data-activates="dropdown_oifarm">O iFarm<i class="material-icons right">arrow_drop_down</i></a></li>
                     <li><a href="{{url('main_overview')}}">Přehled</a></li>
@@ -59,7 +67,7 @@
 </div>
 
 {{ render(url("security_loginForm")) }}
-{{ render(url("user_registerForm")) }}
+{{ render(url("security_registerForm")) }}
 
 <script>
 

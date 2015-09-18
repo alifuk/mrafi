@@ -21,31 +21,7 @@
         {% if demands is empty %}
             <h3 class="center-align">Ještě nemáte vytvořenou poptávku</h3>
         {% else %}
-            <table class="bordered striped highlight">
-                <thead>
-                    <tr>
-                        <th data-field="id">Název</th>
-                        <th data-field="id">Kategorie</th>
-                        <th data-field="name">Datum vytvoření</th>
-                        <th data-field="price">Veřejné</th>
-                        <th data-field="price"></th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for demand in demands %}
-                        <tr>
-                            <td>{{demand.name}}</td>
-                            <td>{{demand.category.name}}</td>
-                            <td>{{demand.dateCreated|date('Y-m-d')}}</td>
-                            <td>{{demand.public}}</td>
-                            <td><a class="waves-effect waves-red btn-flat"><i class="material-icons right">more_vert</i>Možnosti</a></td>
-                        </tr>
-
-                    {% endfor %}
-
-                </tbody>
-            </table>
+            {% include 'AppBundle::Tables/demandTable.html.twig' %}            
         {% endif %}
 
 

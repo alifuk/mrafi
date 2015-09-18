@@ -86,6 +86,22 @@ class Item {
     private $category;
 
     /**
+     * @var integer
+     * 
+     * @ORM\ManyToOne(targetEntity="Item", inversedBy="responceTo")
+     * @ORM\JoinColumn(name="responces", referencedColumnName="id", nullable=true)
+     */
+    private $responces;
+
+    /**
+     * @var integer
+     *
+     * @ORM\OneToMany(targetEntity="Item", mappedBy="responces")
+     *
+     */
+    private $responceTo;
+
+    /**
      *  @ORM\PrePersist 
      */
     public function doStuffOnPrePersist() {
@@ -215,15 +231,13 @@ class Item {
         return $this->owner;
     }
 
-
     /**
      * Set note
      *
      * @param string $note
      * @return Item
      */
-    public function setNote($note)
-    {
+    public function setNote($note) {
         $this->note = $note;
 
         return $this;
@@ -234,8 +248,7 @@ class Item {
      *
      * @return string 
      */
-    public function getNote()
-    {
+    public function getNote() {
         return $this->note;
     }
 
@@ -245,8 +258,7 @@ class Item {
      * @param \DateTime $dateCreated
      * @return Item
      */
-    public function setDateCreated($dateCreated)
-    {
+    public function setDateCreated($dateCreated) {
         $this->dateCreated = $dateCreated;
 
         return $this;
@@ -258,8 +270,7 @@ class Item {
      * @param \AppBundle\Entity\Category $category
      * @return Item
      */
-    public function setCategory(\AppBundle\Entity\Category $category)
-    {
+    public function setCategory(\AppBundle\Entity\Category $category) {
         $this->category = $category;
 
         return $this;
@@ -270,8 +281,71 @@ class Item {
      *
      * @return \AppBundle\Entity\Category 
      */
-    public function getCategory()
-    {
+    public function getCategory() {
         return $this->category;
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->responceTo = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set responces
+     *
+     * @param \AppBundle\Entity\Item $responces
+     * @return Item
+     */
+    public function setResponces(\AppBundle\Entity\Item $responces = null)
+    {
+        $this->responces = $responces;
+
+        return $this;
+    }
+
+    /**
+     * Get responces
+     *
+     * @return \AppBundle\Entity\Item 
+     */
+    public function getResponces()
+    {
+        return $this->responces;
+    }
+
+    /**
+     * Add responceTo
+     *
+     * @param \AppBundle\Entity\Item $responceTo
+     * @return Item
+     */
+    public function addResponceTo(\AppBundle\Entity\Item $responceTo)
+    {
+        $this->responceTo[] = $responceTo;
+
+        return $this;
+    }
+
+    /**
+     * Remove responceTo
+     *
+     * @param \AppBundle\Entity\Item $responceTo
+     */
+    public function removeResponceTo(\AppBundle\Entity\Item $responceTo)
+    {
+        $this->responceTo->removeElement($responceTo);
+    }
+
+    /**
+     * Get responceTo
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getResponceTo()
+    {
+        return $this->responceTo;
     }
 }

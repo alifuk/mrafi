@@ -1,0 +1,3 @@
+{% for category in categories %}
+    <li><a href="{{ path('main_category',{categoryUrl: category.urlName}) }}">{{category.name}}</a></li>
+    {% endfor %}
