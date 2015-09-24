@@ -11,6 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 
 class SecurityController extends Controller {
 
@@ -32,7 +34,7 @@ class SecurityController extends Controller {
 
         $request = Request::createFromGlobals();
         $email = $request->request->get('email');
-        
+
         $password = $request->request->get('password');
 
         $ico = $request->request->get('ico');
@@ -71,7 +73,7 @@ class SecurityController extends Controller {
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        
+
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 

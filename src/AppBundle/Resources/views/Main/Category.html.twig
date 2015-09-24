@@ -5,14 +5,28 @@
 
 {% block body %}
     <div class="container">
-        <h1>Kategorie</h1>
-        {{category.name}}
-        h2
-        
-        <h2>Poptávky</h2>
-        {% include 'AppBundle::Tables/demandTable.html.twig' %}
 
+        <div class="row" style="line-height: 130px;">
+            <div class="col s12 m4 ">
+                <h1 class="center-align">{{category.name}}</h1>
+            </div>
+            <div class="col s12 m4">
+                <a class="waves-effect waves-light btn-large center-align z-depth-0" href={{url('item_create',{'typeStr': 'demand'})}}>
+                    <i class="material-icons left">add</i>Vložit poptávku
+                </a>
+            </div>
+            <div class="col s12 m4">
+                <a class="waves-effect waves-light btn-large center-align z-depth-0" href={{url('item_create',{'typeStr': 'offer'})}}>
+                    <i class="material-icons left">add</i>Vložit nabídku
+                </a>
+            </div>
+        </div>
 
+        <h2 class="center-align">Poptávky</h2>
+        {% include 'AppBundle::Tables/itemsTable.html.twig' with {'items': demands, 'showUser': false}%}
+
+        <h2 class="center-align">Nabídky</h2>
+        {% include 'AppBundle::Tables/itemsTable.html.twig' with {'items': offers, 'showUser': false}%}
 
     </div>
 

@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Repository;
 
+
 class MainController extends Controller {
 
     /**
@@ -102,70 +103,20 @@ class MainController extends Controller {
 
         return ['demands' => $myDemands];
     }
-
-    /**
-     * @Route("/demand-create", name="main_demandCreate")
-     * @Security("has_role('ROLE_USER')")
-     * @Template()
-     */
-    public function demandCreateAction(Request $request) {
-
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        $categories = $this->getDoctrine()
-                ->getRepository('AppBundle:Category')
-                ->findAll();
-
-
-        if ($request->isMethod('POST')) {
-            dump("ukladani");
-
-            $name = $request->request->get('name');
-            $public = $request->request->get('public');
-            $note = $request->request->get('note');
-            $category = $request->request->get('category');
-
-            if (null === $public) {
-                $public = false;
-            } else {
-                $public = true;
-            }
-            dump($request);
-
-
-            $categoryObj = $this->getDoctrine()
-                    ->getRepository('AppBundle:Category')
-                    ->find($category);
-
-
-            $item = new Item();
-            $item->setName($name);
-            $item->setOwner($user);
-            $item->setType(Item::TYPE_DEMAND);
-            $item->setPublic($public);
-            $item->setCategory($categoryObj);
-            $item->setNote($note);
-            $item->setDeleted(0);
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($item);
-            $em->flush();
-            
-            
-            $this->addFlash('success', 'Poptávka úspěšně vytvořena');
-            return $this->redirect($this->generateUrl('main_demand'));
-        }
-
-        return ['categories' => $categories];
-    }
-
+    
     /**
      * @Route("/offer", name="main_offer")
      * @Security("has_role('ROLE_USER')")
      * @Template()
      */
     public function offerAction() {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        return [];
+        $myOffers = $this->getDoctrine()
+                ->getRepository('AppBundle:Item')
+                ->findBy(['owner' => $user, 'type' => Item::TYPE_OFFER]);
+
+        return ['offers' => $myOffers];
     }
 
     /**
@@ -179,13 +130,25 @@ class MainController extends Controller {
     }
 
     /**
+     * @Route("/item/{item}", name="main_item")
+     * @Template()
+     */
+    public function itemAction(Item $item) {
+        $itemO = $this->getDoctrine()
+                ->getRepository("AppBundle:Item")
+                ->find($item);
+        
+        return ['item' => $itemO];
+    }
+
+    /**
      * @Route("/menuLiCategories", name="main_menuLiCategories")
      * @Template()
      */
     public function menuLiCategoriesAction() {
         $categories = $this->getDoctrine()
                 ->getRepository("AppBundle:Category")
-                ->findAll();
+                ->findBy(['parent' => null]);
 
         return ['categories' => $categories];
     }
@@ -200,12 +163,20 @@ class MainController extends Controller {
         $category = $this->getDoctrine()
                 ->getRepository("AppBundle:Category")
                 ->findOneBy(['urlName' => $categoryUrl]);
-        
+
+        $demands = $this->getDoctrine()
+                ->getRepository("AppBundle:Item")
+                ->findBy(['type' => Item::TYPE_DEMAND, 'category' => $category]);
+
+        $offers = $this->getDoctrine()
+                ->getRepository("AppBundle:Item")
+                ->findBy(['type' => Item::TYPE_OFFER, 'category' => $category]);
+
         if (null === $category) {
             $this->addFlash('error', 'Špatná kategorie!');
             return $this->redirect($this->generateUrl('main_landingpage'));
         }
-        return ['category' => $category];
+        return ['category' => $category, 'demands' => $demands, 'offers' => $offers];
     }
 
 }

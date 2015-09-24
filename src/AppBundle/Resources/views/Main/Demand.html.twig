@@ -8,10 +8,10 @@
 
         <div class="row" style="line-height: 130px;">
             <div class="col s12 m4 offset-m4">
-                <h1 class="center-align">Poptávky</h1>
+                <h1 class="center-align">Vaše poptávky</h1>
             </div>
             <div class="col s12 m4">
-                <a class="waves-effect waves-light btn-large center-align z-depth-0" href={{url('main_demandCreate')}}>
+                <a class="waves-effect waves-light btn-large center-align z-depth-0" href={{url('item_create',{'typeStr': 'demand', 'responceTo': '1'})}}>
                     <i class="material-icons left">add</i>Vytvořit poptávku
                 </a>
             </div>
@@ -21,7 +21,7 @@
         {% if demands is empty %}
             <h3 class="center-align">Ještě nemáte vytvořenou poptávku</h3>
         {% else %}
-            {% include 'AppBundle::Tables/demandTable.html.twig' %}            
+            {% include 'AppBundle::Tables/itemsTable.html.twig' with {'items': demands}%}            
         {% endif %}
 
 

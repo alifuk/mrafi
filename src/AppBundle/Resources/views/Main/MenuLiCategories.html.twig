@@ -1,3 +1,19 @@
+<ul id="dropdown_kategorie" class="dropdown-content">
+    {% for category in categories %}
+        <li>
+            <a href="{{ path('main_category',{categoryUrl: category.urlName}) }}" 
+               {% if category.childs %}class="dropdown-button" data-activates="dropdown_{{category.id}}" data-alignment="top" data-gutter="150"{% endif %} >{{category.name}}</a></li>
+        {% endfor %}
+</ul>
+
+
 {% for category in categories %}
-    <li><a href="{{ path('main_category',{categoryUrl: category.urlName}) }}">{{category.name}}</a></li>
+
+    {% for child in category.childs %}
+        <ul id="dropdown_{{category.id}}" class="dropdown-content">
+            <li><a href="{{ path('main_category',{categoryUrl: child.urlName}) }}">-{{child.name}}</a></li>
+        </ul>
+
     {% endfor %}
+
+{% endfor %}

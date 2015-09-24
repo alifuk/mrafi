@@ -14,9 +14,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Item {
 
-    const TYPE_OFFER = 1;
     const TYPE_DEMAND = 1;
-    const TYPE_AUCTION = 1;
+    const TYPE_OFFER = 2;
+    const TYPE_AUCTION = 3;
+    const TYPE_DEMAND_STR = 'demand';
+    const TYPE_OFFER_STR = 'offer';
+    const TYPE_AUCTION_STR = 'auction';
 
     /**
      * @var integer
@@ -47,6 +50,13 @@ class Item {
      * @ORM\Column(name="type", type="smallint")
      */
     private $type;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="price", type="decimal", nullable=true)
+     */
+    private $price;
 
     /**
      * @var boolean
@@ -54,6 +64,13 @@ class Item {
      * @ORM\Column(name="deleted", type="boolean")
      */
     private $deleted;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="completed", type="boolean")
+     */
+    private $completed = false;
 
     /**
      * @var boolean
@@ -67,7 +84,14 @@ class Item {
      *
      * @ORM\Column(name="dateCreated", type="datetime")
      */
-    private $dateCreated;
+    private $dateCreated;    
+    
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="validUntil", type="datetime", nullable=true)
+     */
+    private $validUntil;
 
     /**
      * @var integer
@@ -88,16 +112,15 @@ class Item {
     /**
      * @var integer
      * 
-     * @ORM\ManyToOne(targetEntity="Item", inversedBy="responceTo")
-     * @ORM\JoinColumn(name="responces", referencedColumnName="id", nullable=true)
+     * @ORM\OneToMany(targetEntity="Item", mappedBy="responceTo")
      */
     private $responces;
 
     /**
      * @var integer
      *
-     * @ORM\OneToMany(targetEntity="Item", mappedBy="responces")
-     *
+     * @ORM\ManyToOne(targetEntity="Item", inversedBy="responces")
+     * @ORM\JoinColumn(name="responceTo", referencedColumnName="id", nullable=true)
      */
     private $responceTo;
 
@@ -288,8 +311,7 @@ class Item {
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->responceTo = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -299,8 +321,7 @@ class Item {
      * @param \AppBundle\Entity\Item $responces
      * @return Item
      */
-    public function setResponces(\AppBundle\Entity\Item $responces = null)
-    {
+    public function setResponces(\AppBundle\Entity\Item $responces = null) {
         $this->responces = $responces;
 
         return $this;
@@ -311,8 +332,7 @@ class Item {
      *
      * @return \AppBundle\Entity\Item 
      */
-    public function getResponces()
-    {
+    public function getResponces() {
         return $this->responces;
     }
 
@@ -322,8 +342,7 @@ class Item {
      * @param \AppBundle\Entity\Item $responceTo
      * @return Item
      */
-    public function addResponceTo(\AppBundle\Entity\Item $responceTo)
-    {
+    public function addResponceTo(\AppBundle\Entity\Item $responceTo) {
         $this->responceTo[] = $responceTo;
 
         return $this;
@@ -334,8 +353,7 @@ class Item {
      *
      * @param \AppBundle\Entity\Item $responceTo
      */
-    public function removeResponceTo(\AppBundle\Entity\Item $responceTo)
-    {
+    public function removeResponceTo(\AppBundle\Entity\Item $responceTo) {
         $this->responceTo->removeElement($responceTo);
     }
 
@@ -344,8 +362,150 @@ class Item {
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getResponceTo()
-    {
+    public function getResponceTo() {
         return $this->responceTo;
+    }
+
+    public static function isValidType($type) {
+        if ($type == self::TYPE_AUCTION || $type == self::TYPE_DEMAND || $type == self::TYPE_OFFER) {
+            return true;
+        }
+        return false;
+    }
+
+    public static function typeToInt($type) {
+        dump($type);
+        dump(self::TYPE_DEMAND_STR);
+        switch ($type) {
+            case self::TYPE_DEMAND_STR: return self::TYPE_DEMAND;
+            case self::TYPE_OFFER_STR: return self::TYPE_OFFER;
+            case self::TYPE_AUCTION_STR: return self::TYPE_AUCTION;
+        }
+        throw new \Symfony\Component\OptionsResolver\Exception\InvalidArgumentException();
+    }
+
+    public static function intToType($int) {
+        switch ($int) {
+            case self::TYPE_DEMAND: return self::TYPE_DEMAND_STR;
+            case self::TYPE_OFFER: return self::TYPE_OFFER_STR;
+            case self::TYPE_AUCTION: return self::TYPE_AUCTION_STR;
+        }
+        throw new \Symfony\Component\OptionsResolver\Exception\InvalidArgumentException();
+    }
+
+    public function getTypeToString() {
+        return self::intToType($this->type);
+    }
+
+    public function getOppositeTypeToString() {
+        if ($this->type === self::TYPE_DEMAND) {
+            return self::TYPE_OFFER_STR;
+        } else {
+            return self::TYPE_DEMAND_STR;
+        }
+    }
+
+    /**
+     * Set completed
+     *
+     * @param boolean $completed
+     * @return Item
+     */
+    public function setCompleted($completed) {
+        $this->completed = $completed;
+
+        return $this;
+    }
+
+    /**
+     * Get completed
+     *
+     * @return boolean 
+     */
+    public function getCompleted() {
+        return $this->completed;
+    }
+
+
+    /**
+     * Add responces
+     *
+     * @param \AppBundle\Entity\Item $responces
+     * @return Item
+     */
+    public function addResponce(\AppBundle\Entity\Item $responces)
+    {
+        $this->responces[] = $responces;
+
+        return $this;
+    }
+
+    /**
+     * Remove responces
+     *
+     * @param \AppBundle\Entity\Item $responces
+     */
+    public function removeResponce(\AppBundle\Entity\Item $responces)
+    {
+        $this->responces->removeElement($responces);
+    }
+
+    /**
+     * Set responceTo
+     *
+     * @param \AppBundle\Entity\Item $responceTo
+     * @return Item
+     */
+    public function setResponceTo(\AppBundle\Entity\Item $responceTo = null)
+    {
+        $this->responceTo = $responceTo;
+
+        return $this;
+    }
+
+    /**
+     * Set validUntil
+     *
+     * @param \DateTime $validUntil
+     * @return Item
+     */
+    public function setValidUntil($validUntil)
+    {
+        $this->validUntil = $validUntil;
+
+        return $this;
+    }
+
+    /**
+     * Get validUntil
+     *
+     * @return \DateTime 
+     */
+    public function getValidUntil()
+    {
+        return $this->validUntil;
+    }
+
+    /**
+     * Set price
+     *
+     * @param string $price
+     * @return Item
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return string 
+     */
+    public function getPrice()
+    {
+        return $this->price;
     }
 }

@@ -1,0 +1,49 @@
+<table class="bordered striped highlight">
+    <thead>
+        <tr>
+            <th data-field="id">Název</th>
+            <th data-field="id">Kategorie</th>
+                {% if showUser is defined %}
+                <th data-field="id">Vytvořil</th> 
+                {% endif %}
+            <th data-field="name">Datum vytvoření</th>
+            <th data-field="name">Počet odpovědí</th>
+            <th data-field="price"></th>
+            <th data-field="price"></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in items %}
+            <tr>
+                <td>{{item.name}}</td>
+                <td>{{item.category.name}}</td>
+                {% if showUser is defined%}
+                    <td>{{item.owner.name|default(item.owner.email)}}</td>
+                {% endif %}
+                <td>{{item.dateCreated|date('d.m.Y')}}</td>
+                <td>{{item.responces|length}}</td>
+                <td>
+                    {% if item.public %}<i class="material-icons tooltipped" data-tooltip="Veřejné" data-position="top">language</i>{% endif %}
+                    {% if item.completed %}<i class="material-icons tooltipped" data-tooltip="Vyřízené" data-position="top">done</i>{% endif %}
+                </td>
+                <td><a class="waves-effect waves-red btn-flat dropdown-button" data-beloworigin="true" data-hover="false" data-activates='dropdowndem{{item.id}}'><i class="material-icons right">more_vert</i>Možnosti</a></td>
+            </tr>
+        <ul id='dropdowndem{{item.id}}' class='dropdown-content'>
+            <li><a href="{{url('main_item',{item: item.id})}}" target="_blank"><i class="material-icons left">search</i>Zobrazit</a></li>
+                {% if item.owner == app.user %}
+                <li><a href="{{url('item_markAsDone',{item: item.id})}}"><i class="material-icons left">done</i>Vyřízené</a></li>
+                <li><a href="#!"><i class="material-icons left">layers</i>Upravit</a></li>
+                <li><a href="#!"><i class="material-icons left">layers</i>Duplikovat</a></li>
+                <li class="divider"></li>
+                <li><a href="{{url('item_deleteDemand',{item: item.id })}}"><i class="material-icons left">delete</i>Smazat</a></li>
+                {% else %}                
+                <li><a href="{{path('item_create',{'typeStr': item.oppositeTypeToString, 'responceTo': item.id })}}"><i class="material-icons left">repeat</i>Odpovědět</a></li>
+                {% endif %}
+        </ul>
+
+
+    {% endfor %}
+
+</tbody>
+</table>

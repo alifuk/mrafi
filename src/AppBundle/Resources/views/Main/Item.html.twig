@@ -1,0 +1,47 @@
+{% extends "AppBundle::base.html.twig" %}
+
+{% block title %}iFarm - pro moderní farmáře{% endblock %}
+
+{% block body %}
+    <div class="container">
+
+        <h1>{{ item.name }}</h1>
+        <a class="waves-effect waves-light btn-large center-align z-depth-0" href={{url('item_create',{'typeStr': item.TypeToString})}}>
+            <i class="material-icons left">add</i>Odpovědět
+        </a>
+        <table>
+            <tr>
+                <td>Vyrvořil: </td>
+                <td><a href="{{url('main_profil',{id: item.owner.id})}}"> {{item.owner.name|default(item.owner.email)}}</a></td>
+            </tr>
+            <tr>
+                <td>Kategorie: </td>
+                <td><a href="{{url('main_category',{categoryUrl: item.category.urlName})}}" >{{ item.category.name}}</a></td>
+            </tr>
+            <tr>
+                <td>Poznámka: </td>
+                <td>{{item.note}}</td>
+            </tr>
+            <tr>
+                <td>Datum vytvoření: </td>
+                <td>{{item.dateCreated|date('d.m.Y')}}</td>
+            </tr>
+        </table>
+
+        {% if item.responceTo is null %}
+
+            <h5>Odpovědi:</h5>
+            {% for responce in item.responces %}
+                <a href="{{url('main_item', {'item': responce.id})}}">{{responce.owner.email}}</a>
+            {% else %}
+                <h6>Nemáte žádné odpovědi</h6>
+            {% endfor %}
+
+        {% endif %}
+
+
+
+
+    </div>
+
+{% endblock %}

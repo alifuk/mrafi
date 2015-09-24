@@ -4,7 +4,27 @@
 {% block title %}iFarm - pro moderní farmáře{% endblock %}
 
 {% block body %}
-    <h1 class="center-align">Nabídky</h1>
-    
+    <div class="container">
+
+        <div class="row" style="line-height: 130px;">
+            <div class="col s12 m4 offset-m4">
+                <h1 class="center-align">Vaše nabídky</h1>
+            </div>
+            <div class="col s12 m4">
+                <a class="waves-effect waves-light btn-large center-align z-depth-0" href={{url('item_create',{'typeStr': 'offer'})}}>
+                    <i class="material-icons left">add</i>Vytvořit nabídku
+                </a>
+            </div>
+
+
+        </div>
+        {% if offers is empty %}
+            <h3 class="center-align">Ještě nemáte vytvořenou nabídku</h3>
+        {% else %}
+            {% include 'AppBundle::Tables/itemsTable.html.twig' with {'items': offers}%}            
+        {% endif %}
+
+
+    </div>
 
 {% endblock %}
