@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Gathering;
 use AppBundle\Entity\Item;
 use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -9,8 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Repository;
-
 
 class MainController extends Controller {
 
@@ -51,7 +50,15 @@ class MainController extends Controller {
                 ->getRepository('AppBundle:User')
                 ->find($id);
 
-        return ['user' => $user];
+        $demands = $this->getDoctrine()
+                ->getRepository('AppBundle:Item')
+                ->findDemandsOf($user);
+
+        $offers = $this->getDoctrine()
+                ->getRepository('AppBundle:Item')
+                ->findOffersOf($user);
+
+        return ['user' => $user, 'demands' => $demands, 'offers' => $offers];
     }
 
     /**
@@ -99,11 +106,16 @@ class MainController extends Controller {
 
         $myDemands = $this->getDoctrine()
                 ->getRepository('AppBundle:Item')
-                ->findOwnedBy($user);
+                ->findOffersOf($user);
 
-        return ['demands' => $myDemands];
+        $persOffers = $this->getDoctrine()
+                ->getRepository('AppBundle:Item')
+                ->findPersonificatedOffersFor($user);
+
+
+        return ['demands' => $myDemands, 'persOffers' => $persOffers];
     }
-    
+
     /**
      * @Route("/offer", name="main_offer")
      * @Security("has_role('ROLE_USER')")
@@ -114,9 +126,15 @@ class MainController extends Controller {
 
         $myOffers = $this->getDoctrine()
                 ->getRepository('AppBundle:Item')
-                ->findBy(['owner' => $user, 'type' => Item::TYPE_OFFER]);
+                ->findDemandsOf($user);
 
-        return ['offers' => $myOffers];
+        $persDemands = $this->getDoctrine()
+                ->getRepository('AppBundle:Item')
+                ->findPersonificatedDemandsFor($user);
+
+
+
+        return ['offers' => $myOffers, 'persDemands' => $persDemands];
     }
 
     /**
@@ -126,7 +144,39 @@ class MainController extends Controller {
      */
     public function overviewAction() {
 
-        return [];
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $persOffers = $this->getDoctrine()
+                ->getRepository('AppBundle:Item')
+                ->findPersonificatedOffersFor($user);
+
+        $persDemands = $this->getDoctrine()
+                ->getRepository('AppBundle:Item')
+                ->findPersonificatedDemandsFor($user);
+        return ['offers' => $persOffers, 'demands' => $persDemands];
+    }
+
+    /**
+     * @Route("/gatherings/", name="main_gatherings")
+     * @Security("has_role('ROLE_USER')")
+     * @Template()
+     */
+    public function gatheringsAction() {
+        $gatherings = $this->getDoctrine()
+                ->getRepository('AppBundle:Gathering')
+                ->findAll();
+
+        return ['gatherings' => $gatherings];
+    }
+
+    /**
+     * @Route("/gathering/{gathering}", name="main_gathering")
+     * @Security("has_role('ROLE_USER')")
+     * @Template()
+     */
+    public function gatheringAction(Gathering $gathering) {
+
+        return ['gathering' => $gathering];
     }
 
     /**
@@ -137,7 +187,7 @@ class MainController extends Controller {
         $itemO = $this->getDoctrine()
                 ->getRepository("AppBundle:Item")
                 ->find($item);
-        
+
         return ['item' => $itemO];
     }
 
@@ -164,18 +214,20 @@ class MainController extends Controller {
                 ->getRepository("AppBundle:Category")
                 ->findOneBy(['urlName' => $categoryUrl]);
 
-        $demands = $this->getDoctrine()
-                ->getRepository("AppBundle:Item")
-                ->findBy(['type' => Item::TYPE_DEMAND, 'category' => $category]);
-
-        $offers = $this->getDoctrine()
-                ->getRepository("AppBundle:Item")
-                ->findBy(['type' => Item::TYPE_OFFER, 'category' => $category]);
-
         if (null === $category) {
             $this->addFlash('error', 'Špatná kategorie!');
             return $this->redirect($this->generateUrl('main_landingpage'));
         }
+
+        $demands = $this->getDoctrine()
+                ->getRepository("AppBundle:Item")
+                ->demandsInCategory($category);
+
+        $offers = $this->getDoctrine()
+                ->getRepository("AppBundle:Item")
+                ->offersInCategory($category);
+        dump($demands);
+
         return ['category' => $category, 'demands' => $demands, 'offers' => $offers];
     }
 

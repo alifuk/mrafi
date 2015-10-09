@@ -23,3 +23,21 @@ platnost v tabulce
 název poptávky
 v kategorii skrýt kategorii
 název nabídky
+
+mapa v profilu
+
+skupiny
+posílání emailů
+šablony
+
+
+problémy:
+použití doctrine objektů mimo controllery
+ukládání město-město value
+ukládání a vykreslování parametrů šablony
+jak vybrat všechny produkty v podkategoriích 
+
+pro mě:
+projet tutorial doctriny na zdrojaku
+rabbitMQ projet
+services se naučit

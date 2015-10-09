@@ -31,13 +31,10 @@ class SecurityController extends Controller {
     public function registerAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
 
-
         $request = Request::createFromGlobals();
         $email = $request->request->get('email');
-
         $password = $request->request->get('password');
-
-        $ico = $request->request->get('ico');
+        $ico = trim($request->request->get('ico'));
 
         $user = new User();
 
@@ -50,7 +47,6 @@ class SecurityController extends Controller {
         shuffle($backgroundImages);
         $user->setBackgroundImage($backgroundImages[0]);
 
-
         $profileImages = ['animal', 'corn', 'farming', 'chicken'];
         shuffle($profileImages);
         $user->setProfileImage($profileImages[0]);
@@ -60,6 +56,21 @@ class SecurityController extends Controller {
 
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->get('security.token_storage')->setToken($token);
+
+
+        //rabbit MQ
+        $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+        $channel = $connection->channel();
+
+        $channel->queue_declare('ico_queue', false, false, false, false);
+
+        $msg = new AMQPMessage($ico);
+        $channel->basic_publish($msg, '', 'ico_queue');
+
+        dump(" [x] Sent '$ico'\n");
+        $channel->close();
+        $connection->close();
+
 
 
         return $this->redirect($this->generateUrl('main_landingpage'));

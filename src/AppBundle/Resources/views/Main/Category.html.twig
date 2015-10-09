@@ -22,11 +22,22 @@
             </div>
         </div>
 
+        <div class="row" style="line-height: 130px;">
+            <div class="col s12 m2 ">
+                <h3>Skupiny:</h3>
+            </div>
+            {% for gathering in category.gatherings %}
+                <div class="col s12 m2 ">
+                    <a class="waves-effect waves-light btn"><i class="material-icons left">supervisor_account</i>{{gathering.name}}</a>
+                </div>
+            {% endfor %}
+        </div>
+
         <h2 class="center-align">Poptávky</h2>
-        {% include 'AppBundle::Tables/itemsTable.html.twig' with {'items': demands, 'showUser': false}%}
+        {% include 'AppBundle::Tables/itemsTable.html.twig' with {'items': demands, 'showOwner': true}%}
 
         <h2 class="center-align">Nabídky</h2>
-        {% include 'AppBundle::Tables/itemsTable.html.twig' with {'items': offers, 'showUser': false}%}
+        {% include 'AppBundle::Tables/itemsTable.html.twig' with {'items': offers, 'showOwner': true, 'ownerNaming': 'Nabízející'}%}
 
     </div>
 

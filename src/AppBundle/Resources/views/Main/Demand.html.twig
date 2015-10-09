@@ -24,6 +24,10 @@
             {% include 'AppBundle::Tables/itemsTable.html.twig' with {'items': demands}%}            
         {% endif %}
 
+        <br>
+        <h4 class="center-align">Nabídky, které vás budou zajímat</h4>
+        {% include 'AppBundle::Tables/itemsTable.html.twig' with {'items': persOffers, 'showOwner': true, 'ownerNaming': 'Nabízející'}%} 
+
 
     </div>
 

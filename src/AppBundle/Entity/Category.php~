@@ -66,6 +66,11 @@ class Category
      **/
     private $parameters;
     
+    /**
+     * @ORM\ManyToMany(targetEntity="Gathering", mappedBy="categories")
+     **/
+    private $gatherings;
+    
 
     /**
      * Get id
@@ -120,7 +125,7 @@ class Category
      */
     public function getUrlName()
     {
-        return $this->url-name;
+        return $this->urlName;
     }
 
     /**
@@ -167,5 +172,113 @@ class Category
     public function getParent()
     {
         return $this->parent;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->childs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->items = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->parameters = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add childs
+     *
+     * @param \AppBundle\Entity\Category $childs
+     * @return Category
+     */
+    public function addChild(\AppBundle\Entity\Category $childs)
+    {
+        $this->childs[] = $childs;
+
+        return $this;
+    }
+
+    /**
+     * Remove childs
+     *
+     * @param \AppBundle\Entity\Category $childs
+     */
+    public function removeChild(\AppBundle\Entity\Category $childs)
+    {
+        $this->childs->removeElement($childs);
+    }
+
+    /**
+     * Get childs
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getChilds()
+    {
+        return $this->childs;
+    }
+
+    /**
+     * Add items
+     *
+     * @param \AppBundle\Entity\Item $items
+     * @return Category
+     */
+    public function addItem(\AppBundle\Entity\Item $items)
+    {
+        $this->items[] = $items;
+
+        return $this;
+    }
+
+    /**
+     * Remove items
+     *
+     * @param \AppBundle\Entity\Item $items
+     */
+    public function removeItem(\AppBundle\Entity\Item $items)
+    {
+        $this->items->removeElement($items);
+    }
+
+    /**
+     * Get items
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
+     * Add parameters
+     *
+     * @param \AppBundle\Entity\Parameter $parameters
+     * @return Category
+     */
+    public function addParameter(\AppBundle\Entity\Parameter $parameters)
+    {
+        $this->parameters[] = $parameters;
+
+        return $this;
+    }
+
+    /**
+     * Remove parameters
+     *
+     * @param \AppBundle\Entity\Parameter $parameters
+     */
+    public function removeParameter(\AppBundle\Entity\Parameter $parameters)
+    {
+        $this->parameters->removeElement($parameters);
+    }
+
+    /**
+     * Get parameters
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 }

@@ -3,8 +3,8 @@
         <tr>
             <th data-field="id">Název</th>
             <th data-field="id">Kategorie</th>
-                {% if showUser is defined %}
-                <th data-field="id">Vytvořil</th> 
+                {% if showOwner|default(false) == true %}
+                <th data-field="id">{{ownerNaming|default('Poptávající')}}</th> 
                 {% endif %}
             <th data-field="name">Datum vytvoření</th>
             <th data-field="name">Počet odpovědí</th>
@@ -17,10 +17,10 @@
         {% for item in items %}
             <tr>
                 <td>{{item.name}}</td>
-                <td>{{item.category.name}}</td>
-                {% if showUser is defined%}
-                    <td>{{item.owner.name|default(item.owner.email)}}</td>
-                {% endif %}
+                <td><a href="{{url('main_category', {'categoryUrl': item.category.urlName})}}">{{item.category.name}}</a></td>
+                    {% if showOwner|default(false) == true %}
+                    <td><a href="{{url('main_profil',{'id': item.owner.id})}}">{{item.owner.name|default(item.owner.email)}}</a></td>
+                    {% endif %}
                 <td>{{item.dateCreated|date('d.m.Y')}}</td>
                 <td>{{item.responces|length}}</td>
                 <td>
@@ -29,6 +29,7 @@
                 </td>
                 <td><a class="waves-effect waves-red btn-flat dropdown-button" data-beloworigin="true" data-hover="false" data-activates='dropdowndem{{item.id}}'><i class="material-icons right">more_vert</i>Možnosti</a></td>
             </tr>
+
         <ul id='dropdowndem{{item.id}}' class='dropdown-content'>
             <li><a href="{{url('main_item',{item: item.id})}}" target="_blank"><i class="material-icons left">search</i>Zobrazit</a></li>
                 {% if item.owner == app.user %}

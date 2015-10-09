@@ -116,9 +116,14 @@ class User implements UserInterface {
 
     /**
      * @ORM\OneToMany(targetEntity="Item", mappedBy="owner")
-     **/
+     * */
     private $items;
-    
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Gathering", inversedBy="users")
+     * @ORM\JoinTable(name="users_gatherings")
+     * */
+    private $gatherings;
 
     /**
      * Get id
@@ -438,4 +443,78 @@ class User implements UserInterface {
         return $this->profileImage;
     }
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->items = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->gatherings = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add items
+     *
+     * @param \AppBundle\Entity\Item $items
+     * @return User
+     */
+    public function addItem(\AppBundle\Entity\Item $items)
+    {
+        $this->items[] = $items;
+
+        return $this;
+    }
+
+    /**
+     * Remove items
+     *
+     * @param \AppBundle\Entity\Item $items
+     */
+    public function removeItem(\AppBundle\Entity\Item $items)
+    {
+        $this->items->removeElement($items);
+    }
+
+    /**
+     * Get items
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
+     * Add gatherings
+     *
+     * @param \AppBundle\Entity\Gathering $gatherings
+     * @return User
+     */
+    public function addGathering(\AppBundle\Entity\Gathering $gatherings)
+    {
+        $this->gatherings[] = $gatherings;
+
+        return $this;
+    }
+
+    /**
+     * Remove gatherings
+     *
+     * @param \AppBundle\Entity\Gathering $gatherings
+     */
+    public function removeGathering(\AppBundle\Entity\Gathering $gatherings)
+    {
+        $this->gatherings->removeElement($gatherings);
+    }
+
+    /**
+     * Get gatherings
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getGatherings()
+    {
+        return $this->gatherings;
+    }
 }

@@ -1,17 +1,27 @@
 <?php
+
 require_once __DIR__ . '/vendor/autoload.php';
+
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
-
 
 $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
 $channel = $connection->channel();
 
-$channel->queue_declare('hello', false, false, false, false);
+$channel->queue_declare('ico_queue', false, false, false, false);
 
-$msg = new AMQPMessage('Hello World!');
-$channel->basic_publish($msg, '', 'hello');
+$f = fopen('php://stdin', 'r');
+$stdmessage = "hi";
+while ($line = fgets($f)) {
+    $stdmessage = trim($line," \n\r");
+    break;
+}
 
-echo " [x] Sent 'Hello World!'\n";
+fclose($f);
+
+$msg = new AMQPMessage($stdmessage);
+$channel->basic_publish($msg, '', 'ico_queue');
+
+echo " [x] Sent '$stdmessage'\n";
 $channel->close();
 $connection->close();

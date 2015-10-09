@@ -66,6 +66,11 @@ class Category
      **/
     private $parameters;
     
+    /**
+     * @ORM\ManyToMany(targetEntity="Gathering", mappedBy="categories")
+     **/
+    private $gatherings;
+    
 
     /**
      * Get id
@@ -275,5 +280,38 @@ class Category
     public function getParameters()
     {
         return $this->parameters;
+    }
+
+    /**
+     * Add gatherings
+     *
+     * @param \AppBundle\Entity\Gathering $gatherings
+     * @return Category
+     */
+    public function addGathering(\AppBundle\Entity\Gathering $gatherings)
+    {
+        $this->gatherings[] = $gatherings;
+
+        return $this;
+    }
+
+    /**
+     * Remove gatherings
+     *
+     * @param \AppBundle\Entity\Gathering $gatherings
+     */
+    public function removeGathering(\AppBundle\Entity\Gathering $gatherings)
+    {
+        $this->gatherings->removeElement($gatherings);
+    }
+
+    /**
+     * Get gatherings
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getGatherings()
+    {
+        return $this->gatherings;
     }
 }

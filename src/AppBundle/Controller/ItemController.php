@@ -3,27 +3,28 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Item;
-use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Repository;
-
 class ItemController extends Controller {
 
     /**
      * @Route("/create/{typeStr}/{responceTo}", name="item_create", defaults={"responceTo" = null})
      * @Template()
      */
-    public function itemCreateAction(Request $request, $typeStr, Item $responceTo = null) {
+    public function itemCreateAction(Request $request, $typeStr, $responceTo) {
         $type = Item::typeToInt($typeStr);
 
+        if (null !== $responceTo) {
+            $responceTo = $this->getDoctrine()
+                    ->getRepository('AppBundle:Item')
+                    ->find($responceTo);
+        }
+
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $categories = $this->getDoctrine()
-                ->getRepository('AppBundle:Category')
-                ->findAll();
+
 
 
         if ($request->isMethod('POST')) {
@@ -33,8 +34,8 @@ class ItemController extends Controller {
             $public = $request->request->get('public');
             $note = $request->request->get('note');
             $category = $request->request->get('category');
-            $prise = $request->request->get('prise');
-
+            $price = $request->request->get('price');
+            $validUntil = date("Y-m-d",strtotime($request->request->get('validUntil')));
             if (null === $public) {
                 $public = false;
             } else {
@@ -56,6 +57,8 @@ class ItemController extends Controller {
             $item->setPublic($public);
             $item->setPrice($price);
             $item->setCategory($categoryObj);
+            dump($validUntil);
+            $item->setValidUntil(new \DateTime($validUntil));
             $item->setNote($note);
             $item->setDeleted(0);
 
@@ -73,12 +76,14 @@ class ItemController extends Controller {
             }
         }
         
-        dump($responceTo);
+        $categories = $this->getDoctrine()
+                ->getRepository('AppBundle:Category')
+                ->findAll();
         return ['categories' => $categories, 'type' => Item::intToType($type), 'responceTo' => $responceTo];
     }
 
     /**
-     * @Route("/item/deleteDemand/{item}", name="item_deleteDemand")
+     * @Route("/item/delete/{item}", name="item_deleteDemand")
      */
     public function deleteDemandAction(Item $item) {
 
@@ -86,13 +91,18 @@ class ItemController extends Controller {
             throw $this->createNotFoundException('No item found');
         }
 
+        $type = $item->getType();
         $em = $this->getDoctrine()->getEntityManager();
         $em->remove($item);
         $em->flush();
 
-        $this->addFlash('info', 'Poptávka smazána');
+        if ($type === Item::TYPE_DEMAND) {
+            $this->addFlash('info', 'Nabídka smazána');
+        } else {
+            $this->addFlash('info', 'Poptávka smazána');
+        }
 
-        return $this->redirect($this->generateUrl('main_demand'));
+        return $this->redirect($this->getRequest()->headers->get('referer'));
     }
 
     /**

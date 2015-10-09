@@ -113,13 +113,17 @@ class User implements UserInterface {
      * @ORM\Column(name="profileImage", type="string", length=20, nullable=true)
      */
     private $profileImage;
-    
+
     /**
-     * @var string
-     *
-     * @ORM\Column(name="salt", type="string", length=32, nullable=false)
-     */
-    private $salt;
+     * @ORM\OneToMany(targetEntity="Item", mappedBy="owner")
+     * */
+    private $items;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Gathering", inversedBy="users")
+     * @ORM\JoinTable(name="users_gatherings")
+     * */
+    private $gatherings;
 
     /**
      * Get id
@@ -391,7 +395,7 @@ class User implements UserInterface {
     }
 
     public function getSalt() {
-        return;
+        return md5(uniqid());
     }
 
     public function getUsername() {
