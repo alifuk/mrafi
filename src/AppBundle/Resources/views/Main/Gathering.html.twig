@@ -7,19 +7,26 @@
     <div class="container">
 
         <div class="row" style="line-height: 130px;">
-            <div class="col s12 m4 ">
-                <h1 class="center-align">{{gathering.name}}</h1>
+            <div class="col s12">
+                <h1 class="center-align">Skupina {{gathering.name}}</h1>
             </div>
         </div>
-            
-            {{  
 
+        {% if app.user in gathering.users %} 
+            <a class="waves-effect waves-light btn" href="{{url('main_removeFromGathering', {user: app.user.id , gathering: gathering.id}) }}"><i class="material-icons left">remove</i>Opustit skupinu</a>
+        {% else %}
+            <a class="waves-effect waves-light btn" href="{{url('main_addToGathering', {user: app.user.id , gathering: gathering.id}) }}"><i class="material-icons left">add</i>Přidat se ke skupině</a>
+
+        {% endif %}
+
+        <h4>Členové této skupiny:</h4>
         {% for user in gathering.users %}
-            <h3>{{user.name}}</h3>
+            <h5>{{user.name}}</h5>
         {% endfor %}
-        
+
+        <h4>Kategorie této skupiny:</h4>
         {% for category in gathering.categories %}
-            <h3>{{category.name}}</h3>
+            <h5>{{category.name}}</h5>
         {% endfor %}
 
     </div>

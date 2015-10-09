@@ -62,14 +62,14 @@ class Category
     private $items;
 
     /**
-     * @ORM\OneToMany(targetEntity="Parameter", mappedBy="category")
-     **/
-    private $parameters;
-    
-    /**
      * @ORM\ManyToMany(targetEntity="Gathering", mappedBy="categories")
      **/
     private $gatherings;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Definition", mappedBy="category")
+     **/
+    private $definitions;
     
 
     /**

@@ -180,6 +180,40 @@ class MainController extends Controller {
     }
 
     /**
+     * @Route("/addToGathering/{user}/{gathering}", name="main_addToGathering")
+     * @Security("has_role('ROLE_USER')")
+     * @Template()
+     */
+    public function addToGatheringAction(Gathering $gathering, User $user) {
+
+        $em = $this->getDoctrine()->getManager();
+        $user->addGathering($gathering);
+        //$gathering->addUser($user);
+        //$em->persist($gathering);
+        $em->persist($user);
+        $em->flush();
+
+        return $this->redirect($this->getRequest()->headers->get('referer'));
+    }
+
+    /**
+     * @Route("/removeFromGathering/{user}/{gathering}", name="main_removeFromGathering")
+     * @Security("has_role('ROLE_USER')")
+     * @Template()
+     */
+    public function removeFromGatheringAction(Gathering $gathering, User $user) {
+
+        $em = $this->getDoctrine()->getManager();
+        $user->removeGathering($gathering);
+        //$gathering->addUser($user);
+        //$em->persist($gathering);
+        $em->persist($user);
+        $em->flush();
+
+        return $this->redirect($this->getRequest()->headers->get('referer'));
+    }
+
+    /**
      * @Route("/item/{item}", name="main_item")
      * @Template()
      */

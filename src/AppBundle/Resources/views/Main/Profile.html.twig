@@ -48,7 +48,14 @@
                     <td>{{user.phone}}</td>
                 </tr>
 
-            </table>   
+            </table> 
+
+            <div class="col s12 m4">
+                {% if user.lat is not empty %}
+                    <div id="googleMap" style="width:500px;height:380px;"></div>
+                {% endif %}
+            </div>    
+
         </div>
         <br>
         <h2 class="center-align">Poptávky</h2>
@@ -62,11 +69,30 @@
     </div>
 
 
-
     <script>
         $(function () {
-            $('.parallax').parallax();
-        });
-    </script>
+        $('.parallax').parallax();
+        });    </script>
+    {% if user.lat is not empty %}
+        <script src="http://maps.googleapis.com/maps/api/js"></script>
+        <script>
+
+                function initialize() {
+                var mapProp = {
+                center: new google.maps.LatLng({{user.lat}}, {{user.lng}}),
+                        zoom: 14,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                        var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+                        var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng({{user.lat}}, {{user.lng}}),
+                        });
+                        marker.setMap(map);
+                }
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+        </script>
+    {% endif %}
+
 
 {% endblock %}
