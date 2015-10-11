@@ -23,7 +23,7 @@
                     {% if responceTo is empty %}
                         <div class="row">
                             <div class="input-field col s12">
-                                <select name="category">
+                                <select name="category" id="category">
                                     <option value="" disabled selected>Vyberte kategorii</option>
                                     {% for category in categories %}
                                         <option value="{{category.id}}">{{category.name}}</option>
@@ -34,8 +34,43 @@
                             </div>
                         </div>
                     {% endif %}
-
                     
+                    
+                    {% if responceTo is not empty %}                       
+                        {% include 'AppBundle::Form/params.html.twig' with {'params': responceTo.params}%}
+                    {% endif %}
+
+                    <script>
+
+                        $("#category").change(function () {
+                            loadDefinitions();
+                        });
+
+                        function loadDefinitions() {
+                            var e = document.getElementById("category");
+                            var categoryId = e.options[e.selectedIndex].value;
+
+                            $.ajax({
+                                url: " {{url('ajax_definitions')}} ",
+                                method: "POST",
+                                data: {category: categoryId}
+                            })
+                                    .done(function (data) {
+                                        $("#definitions").html(data);
+                                    });
+                        }
+
+
+                    </script>
+
+
+                    <div id="definitions">
+
+
+
+                    </div>
+
+
                     <div class="row">
                         <div class="input-field col s12">
                             <input type="date" placeholder="Zvolte do kdy bude {% if type == 'demand' %}poptávka{% else %}nabídka{%endif %} platná" 

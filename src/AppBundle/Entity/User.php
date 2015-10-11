@@ -118,6 +118,11 @@ class User implements UserInterface {
      * @ORM\OneToMany(targetEntity="Item", mappedBy="owner")
      * */
     private $items;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="owner")
+     * */
+    private $comments;
 
     /**
      * @ORM\ManyToMany(targetEntity="Gathering", inversedBy="users")
@@ -125,6 +130,14 @@ class User implements UserInterface {
      * */
     private $gatherings;
 
+    
+    
+    
+    
+    
+    
+    
+    
     /**
      * Get id
      *
@@ -516,5 +529,38 @@ class User implements UserInterface {
     public function getGatherings()
     {
         return $this->gatherings;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \AppBundle\Entity\Comment $comments
+     * @return User
+     */
+    public function addComment(\AppBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \AppBundle\Entity\Comment $comments
+     */
+    public function removeComment(\AppBundle\Entity\Comment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

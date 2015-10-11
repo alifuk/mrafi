@@ -3,10 +3,13 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Item;
+use AppBundle\Entity\Param;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\HttpFoundation\Request;
+
 class ItemController extends Controller {
 
     /**
@@ -35,7 +38,11 @@ class ItemController extends Controller {
             $note = $request->request->get('note');
             $category = $request->request->get('category');
             $price = $request->request->get('price');
-            $validUntil = date("Y-m-d",strtotime($request->request->get('validUntil')));
+            $parameters = $request->request->get('parameter');
+            dump($parameters);
+
+
+            $validUntil = date("Y-m-d", strtotime($request->request->get('validUntil')));
             if (null === $public) {
                 $public = false;
             } else {
@@ -61,8 +68,18 @@ class ItemController extends Controller {
             $item->setValidUntil(new \DateTime($validUntil));
             $item->setNote($note);
             $item->setDeleted(0);
-
             $em = $this->getDoctrine()->getManager();
+            foreach ($parameters as $definitionId => $value) {
+                $definition = $this->getDoctrine()->getRepository("AppBundle:Definition")->find($definitionId);
+                $parameter = new Param();
+                $parameter->setDefinition($definition);
+                $parameter->setItem($item);
+                $parameter->setValue($value);
+                $em->persist($parameter);
+                $item->addParam($parameter);
+            }
+
+            
             $em->persist($item);
             $em->flush();
 
@@ -75,7 +92,7 @@ class ItemController extends Controller {
                 return $this->redirect($this->generateUrl('main_offer'));
             }
         }
-        
+
         $categories = $this->getDoctrine()
                 ->getRepository('AppBundle:Category')
                 ->findAll();

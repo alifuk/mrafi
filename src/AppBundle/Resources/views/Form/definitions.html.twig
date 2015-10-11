@@ -1,0 +1,11 @@
+{% for definition in definitions %}
+    {% if definition.type == 1 %}
+        <div class="row">
+            <div class="input-field col s12">
+                <input type="text" placeholder="{{definition.placeholder}}" 
+                       name='parameter[{{definition.id}}]' id="p{{definition.id}}">
+                <label for="p{{definition.id}}">{{definition.name}}</label>
+            </div>
+        </div>
+    {% endif %} 
+{% endfor %}

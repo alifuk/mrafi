@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity
  */
-class Category
-{
+class Category implements MultipleRootNode {
+
     /**
      * @var integer
      *
@@ -22,9 +22,22 @@ class Category
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(type="integer")
+     */
+    private $root;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $lft;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $rgt;
+
+    /**
+     * @ORM\Column(type="string", length=64)
      */
     private $name;
 
@@ -43,67 +56,19 @@ class Category
     private $description;
 
     /**
-     * @var integer
-     * 
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="childs")
-     * @ORM\JoinColumn(name="parent", referencedColumnName="id", nullable=true)
-     */
-    private $parent;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="Category", mappedBy="parent")
-     **/
-    private $childs;
-    
-    
-    /**
      * @ORM\OneToMany(targetEntity="Item", mappedBy="category")
-     **/
+     * */
     private $items;
 
     /**
      * @ORM\ManyToMany(targetEntity="Gathering", mappedBy="categories")
-     **/
+     * */
     private $gatherings;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Definition", mappedBy="category")
-     **/
+     * */
     private $definitions;
-    
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return Category
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
 
     /**
      * Set url-name
@@ -111,8 +76,7 @@ class Category
      * @param string $urlName
      * @return Category
      */
-    public function setUrlName($urlName)
-    {
+    public function setUrlName($urlName) {
         $this->urlName = $urlName;
 
         return $this;
@@ -123,8 +87,7 @@ class Category
      *
      * @return string 
      */
-    public function getUrlName()
-    {
+    public function getUrlName() {
         return $this->urlName;
     }
 
@@ -134,8 +97,7 @@ class Category
      * @param string $description
      * @return Category
      */
-    public function setDescription($description)
-    {
+    public function setDescription($description) {
         $this->description = $description;
 
         return $this;
@@ -146,38 +108,14 @@ class Category
      *
      * @return string 
      */
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
 
     /**
-     * Set parent
-     *
-     * @param integer $parent
-     * @return Category
-     */
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * Get parent
-     *
-     * @return integer 
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-    /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->childs = new \Doctrine\Common\Collections\ArrayCollection();
         $this->items = new \Doctrine\Common\Collections\ArrayCollection();
         $this->parameters = new \Doctrine\Common\Collections\ArrayCollection();
@@ -189,8 +127,7 @@ class Category
      * @param \AppBundle\Entity\Category $childs
      * @return Category
      */
-    public function addChild(\AppBundle\Entity\Category $childs)
-    {
+    public function addChild(\AppBundle\Entity\Category $childs) {
         $this->childs[] = $childs;
 
         return $this;
@@ -201,8 +138,7 @@ class Category
      *
      * @param \AppBundle\Entity\Category $childs
      */
-    public function removeChild(\AppBundle\Entity\Category $childs)
-    {
+    public function removeChild(\AppBundle\Entity\Category $childs) {
         $this->childs->removeElement($childs);
     }
 
@@ -211,8 +147,7 @@ class Category
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getChilds()
-    {
+    public function getChilds() {
         return $this->childs;
     }
 
@@ -222,8 +157,7 @@ class Category
      * @param \AppBundle\Entity\Item $items
      * @return Category
      */
-    public function addItem(\AppBundle\Entity\Item $items)
-    {
+    public function addItem(\AppBundle\Entity\Item $items) {
         $this->items[] = $items;
 
         return $this;
@@ -234,8 +168,7 @@ class Category
      *
      * @param \AppBundle\Entity\Item $items
      */
-    public function removeItem(\AppBundle\Entity\Item $items)
-    {
+    public function removeItem(\AppBundle\Entity\Item $items) {
         $this->items->removeElement($items);
     }
 
@@ -244,42 +177,8 @@ class Category
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getItems()
-    {
+    public function getItems() {
         return $this->items;
-    }
-
-    /**
-     * Add parameters
-     *
-     * @param \AppBundle\Entity\Parameter $parameters
-     * @return Category
-     */
-    public function addParameter(\AppBundle\Entity\Parameter $parameters)
-    {
-        $this->parameters[] = $parameters;
-
-        return $this;
-    }
-
-    /**
-     * Remove parameters
-     *
-     * @param \AppBundle\Entity\Parameter $parameters
-     */
-    public function removeParameter(\AppBundle\Entity\Parameter $parameters)
-    {
-        $this->parameters->removeElement($parameters);
-    }
-
-    /**
-     * Get parameters
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
     }
 
     /**
@@ -288,8 +187,7 @@ class Category
      * @param \AppBundle\Entity\Gathering $gatherings
      * @return Category
      */
-    public function addGathering(\AppBundle\Entity\Gathering $gatherings)
-    {
+    public function addGathering(\AppBundle\Entity\Gathering $gatherings) {
         $this->gatherings[] = $gatherings;
 
         return $this;
@@ -300,8 +198,7 @@ class Category
      *
      * @param \AppBundle\Entity\Gathering $gatherings
      */
-    public function removeGathering(\AppBundle\Entity\Gathering $gatherings)
-    {
+    public function removeGathering(\AppBundle\Entity\Gathering $gatherings) {
         $this->gatherings->removeElement($gatherings);
     }
 
@@ -310,8 +207,78 @@ class Category
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getGatherings()
-    {
+    public function getGatherings() {
         return $this->gatherings;
     }
+
+    /**
+     * Add definitions
+     *
+     * @param \AppBundle\Entity\Definition $definitions
+     * @return Category
+     */
+    public function addDefinition(\AppBundle\Entity\Definition $definitions) {
+        $this->definitions[] = $definitions;
+
+        return $this;
+    }
+
+    /**
+     * Remove definitions
+     *
+     * @param \AppBundle\Entity\Definition $definitions
+     */
+    public function removeDefinition(\AppBundle\Entity\Definition $definitions) {
+        $this->definitions->removeElement($definitions);
+    }
+
+    /**
+     * Get definitions
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDefinitions() {
+        return $this->definitions;
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getLeftValue() {
+        return $this->lft;
+    }
+
+    public function setLeftValue($lft) {
+        $this->lft = $lft;
+    }
+
+    public function getRightValue() {
+        return $this->rgt;
+    }
+
+    public function setRightValue($rgt) {
+        $this->rgt = $rgt;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function setName($name) {
+        $this->name = $name;
+    }
+
+    public function __toString() {
+        return $this->name;
+    }
+
+    public function getRootValue() {
+        return $this->root;
+    }
+
+    public function setRootValue($root) {
+        $this->root = $root;
+    }
+
 }

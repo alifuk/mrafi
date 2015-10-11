@@ -1,0 +1,31 @@
+{% extends "AppBundle::base.html.twig" %}
+
+
+{% block title %}iFarm - pro moderní farmáře{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <h1 class="center-align">Administrace</h1>
+
+
+        <div class="row">
+            <div class="col s4">
+                {% for nodewrapper in tree %}
+                    <h5>
+                        {% for mezera in 0..nodewrapper.level %}-{% endfor %}
+                        {{nodewrapper.node.name}}</h5>
+
+                {% endfor %}
+            </div>
+            <div class="col s4"></div>
+            <div class="col s4"></div>
+        </div>
+
+
+
+    </div>
+
+
+
+{% endblock %}

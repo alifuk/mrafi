@@ -11,13 +11,24 @@
         </a>
         <table>
             <tr>
-                <td>Vyrvořil: </td>
+                <td>Vytvořil: </td>
                 <td><a href="{{url('main_profil',{id: item.owner.id})}}"> {{item.owner.name|default(item.owner.email)}}</a></td>
             </tr>
             <tr>
                 <td>Kategorie: </td>
                 <td><a href="{{url('main_category',{categoryUrl: item.category.urlName})}}" >{{ item.category.name}}</a></td>
             </tr>
+
+            {% for param in item.params %}
+                <tr>
+                    <td>{{param.definition.name}}</td>
+                    <td>{{param.value}}</td>
+                </tr>
+
+            {% endfor %}
+
+
+
             <tr>
                 <td>Poznámka: </td>
                 <td>{{item.note}}</td>
@@ -27,6 +38,32 @@
                 <td>{{item.dateCreated|date('d.m.Y')}}</td>
             </tr>
         </table>
+
+        <h4>Dotazy</h4>
+        {% for comment in item.comments %}
+            <h5>{{comment.owner.name|default(comment.owner.email)}}</h5>
+            <h6>{{comment.text}}</h6>
+        {% endfor %}
+
+        <div class="row">
+            <form class="col s12" method="post" action="{{url('main_addComment',{item: item.id})}}" >
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input placeholder="Máte dotaz? Nebojte se zeptat" id="comment" name="comment" type="text">
+                        <label for="comment">Komentář</label>
+                    </div>
+                    <div class="col s6">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Odeslat dotaz
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+
+
 
         {% if item.responceTo is null %}
 

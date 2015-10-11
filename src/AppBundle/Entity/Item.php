@@ -50,7 +50,7 @@ class Item {
      * @ORM\Column(name="type", type="smallint")
      */
     private $type;
-    
+
     /**
      * @var integer
      *
@@ -84,8 +84,8 @@ class Item {
      *
      * @ORM\Column(name="dateCreated", type="datetime")
      */
-    private $dateCreated;    
-    
+    private $dateCreated;
+
     /**
      * @var DateTime
      *
@@ -105,7 +105,7 @@ class Item {
      * @var integer
      * 
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="items")
-     * @ORM\JoinColumn(name="category", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="category", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $category;
 
@@ -118,11 +118,25 @@ class Item {
 
     /**
      * @var integer
+     * 
+     * @ORM\OneToMany(targetEntity="Param", mappedBy="item")
+     */
+    private $params;
+
+    /**
+     * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Item", inversedBy="responces")
-     * @ORM\JoinColumn(name="responceTo", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="responceTo", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     private $responceTo;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="item")
+     * */
+    private $comments;
+    
+    
 
     /**
      *  @ORM\PrePersist 
@@ -426,15 +440,13 @@ class Item {
         return $this->completed;
     }
 
-
     /**
      * Add responces
      *
      * @param \AppBundle\Entity\Item $responces
      * @return Item
      */
-    public function addResponce(\AppBundle\Entity\Item $responces)
-    {
+    public function addResponce(\AppBundle\Entity\Item $responces) {
         $this->responces[] = $responces;
 
         return $this;
@@ -445,8 +457,7 @@ class Item {
      *
      * @param \AppBundle\Entity\Item $responces
      */
-    public function removeResponce(\AppBundle\Entity\Item $responces)
-    {
+    public function removeResponce(\AppBundle\Entity\Item $responces) {
         $this->responces->removeElement($responces);
     }
 
@@ -456,8 +467,7 @@ class Item {
      * @param \AppBundle\Entity\Item $responceTo
      * @return Item
      */
-    public function setResponceTo(\AppBundle\Entity\Item $responceTo = null)
-    {
+    public function setResponceTo(\AppBundle\Entity\Item $responceTo = null) {
         $this->responceTo = $responceTo;
 
         return $this;
@@ -469,8 +479,7 @@ class Item {
      * @param \DateTime $validUntil
      * @return Item
      */
-    public function setValidUntil($validUntil)
-    {
+    public function setValidUntil($validUntil) {
         $this->validUntil = $validUntil;
 
         return $this;
@@ -481,8 +490,7 @@ class Item {
      *
      * @return \DateTime 
      */
-    public function getValidUntil()
-    {
+    public function getValidUntil() {
         return $this->validUntil;
     }
 
@@ -492,8 +500,7 @@ class Item {
      * @param string $price
      * @return Item
      */
-    public function setPrice($price)
-    {
+    public function setPrice($price) {
         $this->price = $price;
 
         return $this;
@@ -504,8 +511,74 @@ class Item {
      *
      * @return string 
      */
-    public function getPrice()
-    {
+    public function getPrice() {
         return $this->price;
+    }
+
+
+    /**
+     * Add params
+     *
+     * @param \AppBundle\Entity\Param $params
+     * @return Item
+     */
+    public function addParam(\AppBundle\Entity\Param $params)
+    {
+        $this->params[] = $params;
+
+        return $this;
+    }
+
+    /**
+     * Remove params
+     *
+     * @param \AppBundle\Entity\Param $params
+     */
+    public function removeParam(\AppBundle\Entity\Param $params)
+    {
+        $this->params->removeElement($params);
+    }
+
+    /**
+     * Get params
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \AppBundle\Entity\Comment $comments
+     * @return Item
+     */
+    public function addComment(\AppBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \AppBundle\Entity\Comment $comments
+     */
+    public function removeComment(\AppBundle\Entity\Comment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

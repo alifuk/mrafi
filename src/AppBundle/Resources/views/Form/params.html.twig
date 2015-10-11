@@ -1,0 +1,11 @@
+{% for param in params %}
+    {% if param.definition.type == 1 %}
+        <div class="row">
+            <div class="input-field col s12">
+                <input type="text" placeholder="{{param.definition.placeholder}}" 
+                       name='parameter[{{param.definition.id}}]' id="p{{param.definition.id}}" value="{{param.value}}">
+                <label for="p{{param.definition.id}}">{{param.definition.name}}</label>
+            </div>
+        </div>
+    {% endif %} 
+{% endfor %}

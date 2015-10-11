@@ -2,6 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Config;
+use AppBundle\Entity\Comment;
+use AppBundle\Entity\Category;
+use AppBundle\Entity\Manager;
 use AppBundle\Entity\Gathering;
 use AppBundle\Entity\Item;
 use AppBundle\Entity\User;
@@ -18,8 +22,28 @@ class MainController extends Controller {
      * @Template()
      */
     public function landingPageAction() {
+
+        $em = $this->getDoctrine()->getManager();
+        $config = new Config($em, 'AppBundle\Entity\Category');
+        $nsm = new Manager($config);
+
+        
+        
+        
+        $rootNode = $nsm->fetchBranch(11);
+
+        $child1 = new Category();
+        $child1->setName('Ovces');
+        $child1->setUrlName('ovces');
+        $child1->setRootValue(1);
+
+        $rootNode->addChild($child1);
+
+
+
+
+
         $task = new User();
-        $task->setPhone("606 544 258");
 
         $formRegister = $this->createFormBuilder($task, ['action' => $this->generateUrl('security_register')])
                 ->add('email', 'text')
@@ -263,6 +287,26 @@ class MainController extends Controller {
         dump($demands);
 
         return ['category' => $category, 'demands' => $demands, 'offers' => $offers];
+    }
+
+    /**
+     * @Route("/addComment/{item}" ,name="main_addComment")
+     * @Security("has_role('ROLE_USER')")   
+     */
+    public function addCommentAction(Request $request, Item $item) {
+        $text = $request->request->get('comment');
+
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $comment = new Comment();
+        $comment->setOwner($user);
+        $comment->setItem($item);
+        $comment->setText($text);
+
+        $em->persist($comment);
+        $em->flush();
+        return $this->redirect($request->headers->get('referer'));
     }
 
 }

@@ -21,7 +21,7 @@
 
         <h4>Členové této skupiny:</h4>
         {% for user in gathering.users %}
-            <h5>{{user.name}}</h5>
+            <h5>{{user.name|default(user.email)}}</h5>
         {% endfor %}
 
         <h4>Kategorie této skupiny:</h4>

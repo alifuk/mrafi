@@ -66,17 +66,9 @@ class Definition {
      * @var integer
      * 
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="definitions")
-     * @ORM\JoinColumn(name="category", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="category", referencedColumnName="id", nullable=false)
      */
     private $category;
-    
-    /**
-     * @var integer
-     * 
-     * @ORM\OneToMany(targetEntity="Param", mappedBy="definition")
-     */
-    private $parameters;
-    
 
     /**
      * Get id
@@ -198,27 +190,4 @@ class Definition {
     }
     
     
-
-    /**
-     * Set placeholder
-     *
-     * @param string $placeholder
-     * @return Definition
-     */
-    public function setPlaceholder($placeholder)
-    {
-        $this->placeholder = $placeholder;
-
-        return $this;
-    }
-
-    /**
-     * Get placeholder
-     *
-     * @return string 
-     */
-    public function getPlaceholder()
-    {
-        return $this->placeholder;
-    }
 }
