@@ -39,6 +39,91 @@ class ItemController extends Controller {
             $category = $request->request->get('category');
             $price = $request->request->get('price');
             $parameters = $request->request->get('parameter');
+            $parameters = $request->request->get('parameter') == null? [] : $request->request->get('parameter') ;
+            dump($parameters);
+
+
+            $validUntil = date("Y-m-d", strtotime($request->request->get('validUntil')));
+            if (null === $public) {
+                $public = false;
+            } else {
+                $public = true;
+            }
+            dump($request);
+
+
+            $categoryObj = $this->getDoctrine()
+                    ->getRepository('AppBundle:Category')
+                    ->find($category);
+
+
+            $item = new Item();
+            $item->setName($name);
+            $item->setOwner($user);
+            $item->setType($type);
+            $item->setResponceTo($responceTo);
+            $item->setPublic($public);
+            $item->setPrice($price);
+            $item->setCategory($categoryObj);
+            dump($validUntil);
+            $item->setValidUntil(new \DateTime($validUntil));
+            $item->setNote($note);
+            $item->setDeleted(0);
+            $em = $this->getDoctrine()->getManager();
+            foreach ($parameters as $definitionId => $value) {
+                $definition = $this->getDoctrine()->getRepository("AppBundle:Definition")->find($definitionId);
+                $parameter = new Param();
+                $parameter->setDefinition($definition);
+                $parameter->setItem($item);
+                $parameter->setValue($value);
+                $em->persist($parameter);
+                $item->addParam($parameter);
+            }
+
+            
+            $em->persist($item);
+            $em->flush();
+
+
+            if ($type === Item::TYPE_DEMAND) {
+                $this->addFlash('success', 'Poptávka úspěšně vytvořena');
+                return $this->redirect($this->generateUrl('main_demand'));
+            } else {
+                $this->addFlash('success', 'Nabídka úspěšně vytvořena');
+                return $this->redirect($this->generateUrl('main_offer'));
+            }
+        }
+
+        $categories = $this->getDoctrine()
+                ->getRepository('AppBundle:Category')
+                ->findAll();
+        return ['categories' => $categories, 'type' => Item::intToType($type), 'responceTo' => $responceTo];
+    }
+    
+    public function itemCreate(Request $request, $typeStr, $responceTo) {
+        $type = Item::typeToInt($typeStr);
+
+        if (null !== $responceTo) {
+            $responceTo = $this->getDoctrine()
+                    ->getRepository('AppBundle:Item')
+                    ->find($responceTo);
+        }
+
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+
+
+        if ($request->isMethod('POST')) {
+            dump("ukladani");
+
+            $name = $request->request->get('name');
+            $public = $request->request->get('public');
+            $note = $request->request->get('note');
+            $category = $request->request->get('category');
+            $price = $request->request->get('price');
+            $parameters = $request->request->get('parameter');
+            $parameters = $request->request->get('parameter') == null? [] : $request->request->get('parameter') ;
             dump($parameters);
 
 

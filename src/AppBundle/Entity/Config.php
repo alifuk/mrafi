@@ -50,7 +50,7 @@ class Config
      * @param mixed $clazz a class name or ClassMetadata object representing
      *   the entity class associated with this configuration
      */
-    public function __construct(EntityManager $em, $clazz=null)
+    public function __construct(EntityManager $em, $clazz='Appbundle\Entity\Category')
     {
         $this->em = $em;
 

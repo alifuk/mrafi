@@ -27,9 +27,9 @@ class MainController extends Controller {
         $config = new Config($em, 'AppBundle\Entity\Category');
         $nsm = new Manager($config);
 
-        
-        
-        
+
+
+
         $rootNode = $nsm->fetchBranch(11);
 
         $child1 = new Category();
@@ -254,10 +254,15 @@ class MainController extends Controller {
      * @Template()
      */
     public function menuLiCategoriesAction() {
-        $categories = $this->getDoctrine()
-                ->getRepository("AppBundle:Category")
-                ->findBy(['parent' => null]);
 
+        $em = $this->getDoctrine()->getManager();
+        $config = new Config($em);
+        $nsm = new Manager($config);
+
+        /* $categories = $this->getDoctrine()
+          ->getRepository("AppBundle:Category")
+          ->findBy(['parent' => null]); */
+        $categories = array_merge($nsm->fetchTreeAsArray(13), $nsm->fetchTreeAsArray(15), $nsm->fetchTreeAsArray(16));
         return ['categories' => $categories];
     }
 
