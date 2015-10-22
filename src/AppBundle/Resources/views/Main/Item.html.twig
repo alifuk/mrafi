@@ -41,7 +41,7 @@
 
         <h4>Dotazy</h4>
         {% for comment in item.comments %}
-            <h5>{{comment.owner.name|default(comment.owner.email)}}</h5>
+            <h5><a href="{{url('main_profil',{id: comment.owner.id})}}" target="_blank">{{comment.owner.name|default(comment.owner.email)}}</a></h5>
             <h6>{{comment.text}}</h6>
         {% endfor %}
 

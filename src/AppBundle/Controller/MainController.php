@@ -22,27 +22,6 @@ class MainController extends Controller {
      * @Template()
      */
     public function landingPageAction() {
-
-        $em = $this->getDoctrine()->getManager();
-        $config = new Config($em, 'AppBundle\Entity\Category');
-        $nsm = new Manager($config);
-
-
-
-
-        $rootNode = $nsm->fetchBranch(11);
-
-        $child1 = new Category();
-        $child1->setName('Ovces');
-        $child1->setUrlName('ovces');
-        $child1->setRootValue(1);
-
-        $rootNode->addChild($child1);
-
-
-
-
-
         $task = new User();
 
         $formRegister = $this->createFormBuilder($task, ['action' => $this->generateUrl('security_register')])
@@ -130,7 +109,7 @@ class MainController extends Controller {
 
         $myDemands = $this->getDoctrine()
                 ->getRepository('AppBundle:Item')
-                ->findOffersOf($user);
+                ->findDemandsOf($user);
 
         $persOffers = $this->getDoctrine()
                 ->getRepository('AppBundle:Item')
@@ -150,7 +129,7 @@ class MainController extends Controller {
 
         $myOffers = $this->getDoctrine()
                 ->getRepository('AppBundle:Item')
-                ->findDemandsOf($user);
+                ->findOffersOf($user);
 
         $persDemands = $this->getDoctrine()
                 ->getRepository('AppBundle:Item')
