@@ -21,6 +21,7 @@ class Distance
      */
     private $id;
     
+    
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="distanceFrom")
      * @ORM\JoinColumn(name="user_from", referencedColumnName="id")
@@ -50,5 +51,74 @@ class Distance
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set distance
+     *
+     * @param integer $distance
+     * @return Distance
+     */
+    public function setDistance($distance)
+    {
+        $this->distance = $distance;
+
+        return $this;
+    }
+
+    /**
+     * Get distance
+     *
+     * @return integer 
+     */
+    public function getDistance()
+    {
+        return $this->distance;
+    }
+
+    /**
+     * Set userFrom
+     *
+     * @param \AppBundle\Entity\User $userFrom
+     * @return Distance
+     */
+    public function setUserFrom(\AppBundle\Entity\User $userFrom = null)
+    {
+        $this->userFrom = $userFrom;
+
+        return $this;
+    }
+
+    /**
+     * Get userFrom
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getUserFrom()
+    {
+        return $this->userFrom;
+    }
+
+    /**
+     * Set userTo
+     *
+     * @param \AppBundle\Entity\User $userTo
+     * @return Distance
+     */
+    public function setUserTo(\AppBundle\Entity\User $userTo = null)
+    {
+        $this->userTo = $userTo;
+
+        return $this;
+    }
+
+    /**
+     * Get userTo
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getUserTo()
+    {
+        return $this->userTo;
     }
 }

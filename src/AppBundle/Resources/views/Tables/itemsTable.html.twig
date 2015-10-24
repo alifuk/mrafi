@@ -8,6 +8,7 @@
                 {% endif %}
             <th data-field="name">Datum vytvoření</th>
             <th data-field="name">Počet odpovědí</th>
+            <th data-field="name">Vzdálenost</th>
             <th data-field="price"></th>
             <th data-field="price"></th>
         </tr>
@@ -15,20 +16,25 @@
 
     <tbody>
         {% for item in items %}
-            <tr>
-                <td><a href="{{url('main_item',{item: item.id})}}" target="_blank">{{item.name}}</a></td>
-                <td><a href="{{url('main_category', {'categoryUrl': item.category.urlName})}}">{{item.category.name}}</a></td>
-                    {% if showOwner|default(false) == true %}
-                    <td><a href="{{url('main_profil',{'id': item.owner.id})}}">{{item.owner.name|default(item.owner.email)}}</a></td>
-                    {% endif %}
-                <td>{{item.dateCreated|date('d.m.Y')}}</td>
-                <td>{{item.responces|length}}</td>
-                <td>
-                    {% if item.public %}<i class="material-icons tooltipped" data-tooltip="Veřejné" data-position="top">language</i>{% endif %}
-                    {% if item.completed %}<i class="material-icons tooltipped" data-tooltip="Vyřízené" data-position="top">done</i>{% endif %}
-                </td>
-                <td><a class="waves-effect waves-red btn-flat dropdown-button" data-beloworigin="true" data-hover="false" data-activates='dropdowndem{{item.id}}'><i class="material-icons right">more_vert</i>Možnosti</a></td>
-            </tr>
+        <script>
+            CountDownTimer('{{item.validUntil|date('r')}}', 'countdown{{item.id}}');
+
+        </script>
+        <tr>
+            <td><a href="{{url('main_item',{item: item.id})}}" target="_blank">{{item.name}}</a></td>
+            <td><a href="{{url('main_category', {'categoryUrl': item.category.urlName})}}">{{item.category.name}}</a></td>
+                {% if showOwner|default(false) == true %}
+                <td><a href="{{url('main_profil',{'id': item.owner.id})}}">{{item.owner.name|default(item.owner.email)}}</a></td>
+                {% endif %}
+            <td><div id="countdown{{item.id}}"></div></td>
+            <td>{{item.responces|length}}</td>
+            <td>{{item.owner.distance}} km</td>
+            <td>
+                {% if item.public %}<i class="material-icons tooltipped" data-tooltip="Veřejné" data-position="top">language</i>{% endif %}
+                {% if item.completed %}<i class="material-icons tooltipped" data-tooltip="Vyřízené" data-position="top">done</i>{% endif %}
+            </td>
+            <td><a class="waves-effect waves-red btn-flat dropdown-button" data-beloworigin="true" data-hover="false" data-activates='dropdowndem{{item.id}}'><i class="material-icons right">more_vert</i>Možnosti</a></td>
+        </tr>
 
         <ul id='dropdowndem{{item.id}}' class='dropdown-content'>
             <li><a href="{{url('main_item',{item: item.id})}}" target="_blank"><i class="material-icons left">search</i>Zobrazit</a></li>
@@ -48,3 +54,42 @@
 
 </tbody>
 </table>
+<script>
+
+    //CountDownTimer('02/19/2012 10:1 AM', 'countdown');
+
+    function CountDownTimer(dt, id)
+    {
+        var end = new Date(dt);
+
+        var _second = 1000;
+        var _minute = _second * 60;
+        var _hour = _minute * 60;
+        var _day = _hour * 24;
+        var timer;
+
+        function showRemaining() {
+            var now = new Date();
+            var distance = end - now;
+            if (distance < 0) {
+
+                clearInterval(timer);
+                document.getElementById(id).innerHTML = 'EXPIRED!';
+
+                return;
+            }
+            var days = Math.floor(distance / _day);
+            var hours = Math.floor((distance % _day) / _hour);
+            var minutes = Math.floor((distance % _hour) / _minute);
+            var seconds = Math.floor((distance % _minute) / _second);
+
+            document.getElementById(id).innerHTML = days + ' dní, ';
+            document.getElementById(id).innerHTML += hours + ':';
+            document.getElementById(id).innerHTML += minutes + ':';
+            document.getElementById(id).innerHTML += seconds + ' ';
+        }
+
+        timer = setInterval(showRemaining, 1000);
+    }
+
+</script>

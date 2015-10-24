@@ -130,9 +130,22 @@ class User implements UserInterface {
      * */
     private $gatherings;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Distance", mappedBy="user_from")
+     * */
+    private $distanceFrom;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Distance", mappedBy="user_to")
+     * */
+    private $distanceTo;
     
-    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="distance", type="string", length=20, nullable=true)
+     */
+    private $distance;
     
     
     
@@ -562,5 +575,94 @@ class User implements UserInterface {
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * Set distance
+     *
+     * @param string $distance
+     * @return User
+     */
+    public function setDistance($distance)
+    {
+        $this->distance = $distance;
+
+        return $this;
+    }
+
+    /**
+     * Get distance
+     *
+     * @return string 
+     */
+    public function getDistance()
+    {
+        return $this->distance;
+    }
+
+    /**
+     * Add distanceFrom
+     *
+     * @param \AppBundle\Entity\Distance $distanceFrom
+     * @return User
+     */
+    public function addDistanceFrom(\AppBundle\Entity\Distance $distanceFrom)
+    {
+        $this->distanceFrom[] = $distanceFrom;
+
+        return $this;
+    }
+
+    /**
+     * Remove distanceFrom
+     *
+     * @param \AppBundle\Entity\Distance $distanceFrom
+     */
+    public function removeDistanceFrom(\AppBundle\Entity\Distance $distanceFrom)
+    {
+        $this->distanceFrom->removeElement($distanceFrom);
+    }
+
+    /**
+     * Get distanceFrom
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDistanceFrom()
+    {
+        return $this->distanceFrom;
+    }
+
+    /**
+     * Add distanceTo
+     *
+     * @param \AppBundle\Entity\Distance $distanceTo
+     * @return User
+     */
+    public function addDistanceTo(\AppBundle\Entity\Distance $distanceTo)
+    {
+        $this->distanceTo[] = $distanceTo;
+
+        return $this;
+    }
+
+    /**
+     * Remove distanceTo
+     *
+     * @param \AppBundle\Entity\Distance $distanceTo
+     */
+    public function removeDistanceTo(\AppBundle\Entity\Distance $distanceTo)
+    {
+        $this->distanceTo->removeElement($distanceTo);
+    }
+
+    /**
+     * Get distanceTo
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDistanceTo()
+    {
+        return $this->distanceTo;
     }
 }

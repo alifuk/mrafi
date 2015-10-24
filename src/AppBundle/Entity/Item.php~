@@ -105,7 +105,7 @@ class Item {
      * @var integer
      * 
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="items")
-     * @ORM\JoinColumn(name="category", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="category", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $category;
 
@@ -127,7 +127,7 @@ class Item {
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Item", inversedBy="responces")
-     * @ORM\JoinColumn(name="responceTo", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="responceTo", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     private $responceTo;
     
@@ -547,5 +547,38 @@ class Item {
     public function getParams()
     {
         return $this->params;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \AppBundle\Entity\Comment $comments
+     * @return Item
+     */
+    public function addComment(\AppBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \AppBundle\Entity\Comment $comments
+     */
+    public function removeComment(\AppBundle\Entity\Comment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

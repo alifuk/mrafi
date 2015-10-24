@@ -73,7 +73,7 @@ class SecurityController extends Controller {
 
 
 
-        return $this->redirect($this->generateUrl('main_landingpage'));
+        return $this->redirect($this->generateUrl('main_overview'));
     }
 
     /**

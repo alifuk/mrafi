@@ -251,6 +251,8 @@ class MainController extends Controller {
      * @Template()
      */
     public function categoryAction($categoryUrl) {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
 
         $category = $this->getDoctrine()
                 ->getRepository("AppBundle:Category")
@@ -263,11 +265,11 @@ class MainController extends Controller {
 
         $demands = $this->getDoctrine()
                 ->getRepository("AppBundle:Item")
-                ->demandsInCategory($category);
+                ->demandsInCategory($category, $user);
 
         $offers = $this->getDoctrine()
                 ->getRepository("AppBundle:Item")
-                ->offersInCategory($category);
+                ->offersInCategory($category, $user);
         dump($demands);
 
         return ['category' => $category, 'demands' => $demands, 'offers' => $offers];

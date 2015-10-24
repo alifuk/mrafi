@@ -130,9 +130,22 @@ class User implements UserInterface {
      * */
     private $gatherings;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Distance", mappedBy="user_from")
+     * */
+    private $distanceFrom;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Distance", mappedBy="user_to")
+     * */
+    private $distanceTo;
     
-    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="distance", type="string", length=20, nullable=true)
+     */
+    private $distance;
     
     
     
@@ -529,5 +542,38 @@ class User implements UserInterface {
     public function getGatherings()
     {
         return $this->gatherings;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \AppBundle\Entity\Comment $comments
+     * @return User
+     */
+    public function addComment(\AppBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \AppBundle\Entity\Comment $comments
+     */
+    public function removeComment(\AppBundle\Entity\Comment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

@@ -5,6 +5,7 @@ namespace AppBundle\Repository;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\Item;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Distance;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -79,22 +80,25 @@ class ItemRepository extends EntityRepository {
         ;
     }
 
-    public function demandsInCategory(Category $category) {
-        return $this->itemsInCategory($category, Item::TYPE_DEMAND);
+    public function demandsInCategory(Category $category, User $userFrom) {
+        return $this->itemsInCategory($category, Item::TYPE_DEMAND, $userFrom);
     }
 
-    public function offersInCategory(Category $category) {
-        return $this->itemsInCategory($category, Item::TYPE_OFFER);
+    public function offersInCategory(Category $category, User $userFrom) {
+        return $this->itemsInCategory($category, Item::TYPE_OFFER, $userFrom);
     }
 
-    public function itemsInCategory(Category $category, $type) {
+    public function itemsInCategory(Category $category, $type, User $userFrom) {
         return $this
                         ->createQueryBuilder('i')
                         ->select('i')
                         ->andWhere('i.deleted = 0')
                         ->andWhere('i.completed = 0')
                         ->andWhere('i.type = :type')->setParameter('type', $type)
-                        ->leftJoin('i.category', 'c', 'i.category == c.id')                
+                        ->leftJoin('i.category', 'c', 'i.category == c.id') 
+                        ->leftJoin('AppBundle\Entity\Distance', 'd')   
+                        /*->leftJoin('i.owner', 'o', 'o.id == i.owner')             
+                        ->andWhere('d.userFrom = :userFrom')->setParameter('userFrom', $userFrom->getId())*/
                         ->andWhere('c.lft >= :categoryLft')->setParameter('categoryLft', $category->getLeftValue())
                         ->andWhere('c.rgt <= :categoryRgt')->setParameter('categoryRgt', $category->getRightValue())
                         ->andWhere('c.root = :categoryRoot')->setParameter('categoryRoot', $category->getRootValue())               
