@@ -97,7 +97,7 @@ class Item {
      * @var integer
      * 
      * @ORM\ManyToOne(targetEntity="User", inversedBy="items")
-     * @ORM\JoinColumn(name="owner", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="owner", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $owner;
 

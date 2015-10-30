@@ -1,3 +1,52 @@
+<script>
+
+    //CountDownTimer('02/19/2012 10:1 AM', 'countdown');
+
+    function CountDownTimer(dt, id)
+    {
+        var end = new Date(dt);
+
+        var _second = 1000;
+        var _minute = _second * 60;
+        var _hour = _minute * 60;
+        var _day = _hour * 24;
+        var timer;
+
+        function showRemaining() {
+            var now = new Date();
+            var distance = end - now;
+            if (distance < 0) {
+
+                clearInterval(timer);
+                document.getElementById(id).innerHTML = ' Uzavřeno';
+
+                return;
+            }
+            var days = Math.floor(distance / _day);
+            var hours = Math.floor((distance % _day) / _hour);
+            var minutes = Math.floor((distance % _hour) / _minute);
+            var seconds = Math.floor((distance % _minute) / _second);
+
+            if (days === 1) {
+                document.getElementById(id).innerHTML = days + ' den, ';
+            } else if (days >= 2 && days <= 4) {
+                document.getElementById(id).innerHTML = days + ' dny, ';
+            } else {
+                document.getElementById(id).innerHTML = days + ' dní, ';
+            }
+
+            if (minutes.toString().length === 1) {
+                minutes = "" + 0 + minutes;
+            }
+            document.getElementById(id).innerHTML += hours + ':';
+            document.getElementById(id).innerHTML += minutes + ':';
+            document.getElementById(id).innerHTML += seconds + ' ';
+        }
+
+        timer = setInterval(showRemaining, 1000);
+    }
+
+</script>
 <table class="bordered striped highlight">
     <thead>
         <tr>
@@ -6,7 +55,7 @@
                 {% if showOwner|default(false) == true %}
                 <th data-field="id">{{ownerNaming|default('Poptávající')}}</th> 
                 {% endif %}
-            <th data-field="name">Datum vytvoření</th>
+            <th data-field="name">Platnost</th>
             <th data-field="name">Počet odpovědí</th>
             <th data-field="name">Vzdálenost</th>
             <th data-field="price"></th>
@@ -28,7 +77,7 @@
                 {% endif %}
             <td><div id="countdown{{item.id}}"></div></td>
             <td>{{item.responces|length}}</td>
-            <td>{{item.owner.distance}} km</td>
+            <td><a href="https://www.google.cz/maps/dir/{{app.user.lat}},{{app.user.lng}}/{{item.owner.lat}},{{item.owner.lng}}" target="_blank">{{item.owner.distance}} km</a></td>
             <td>
                 {% if item.public %}<i class="material-icons tooltipped" data-tooltip="Veřejné" data-position="top">language</i>{% endif %}
                 {% if item.completed %}<i class="material-icons tooltipped" data-tooltip="Vyřízené" data-position="top">done</i>{% endif %}
@@ -54,42 +103,4 @@
 
 </tbody>
 </table>
-<script>
 
-    //CountDownTimer('02/19/2012 10:1 AM', 'countdown');
-
-    function CountDownTimer(dt, id)
-    {
-        var end = new Date(dt);
-
-        var _second = 1000;
-        var _minute = _second * 60;
-        var _hour = _minute * 60;
-        var _day = _hour * 24;
-        var timer;
-
-        function showRemaining() {
-            var now = new Date();
-            var distance = end - now;
-            if (distance < 0) {
-
-                clearInterval(timer);
-                document.getElementById(id).innerHTML = 'EXPIRED!';
-
-                return;
-            }
-            var days = Math.floor(distance / _day);
-            var hours = Math.floor((distance % _day) / _hour);
-            var minutes = Math.floor((distance % _hour) / _minute);
-            var seconds = Math.floor((distance % _minute) / _second);
-
-            document.getElementById(id).innerHTML = days + ' dní, ';
-            document.getElementById(id).innerHTML += hours + ':';
-            document.getElementById(id).innerHTML += minutes + ':';
-            document.getElementById(id).innerHTML += seconds + ' ';
-        }
-
-        timer = setInterval(showRemaining, 1000);
-    }
-
-</script>

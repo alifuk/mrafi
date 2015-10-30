@@ -64,7 +64,9 @@ class SecurityController extends Controller {
 
         $channel->queue_declare('ico_queue', false, false, false, false);
 
-        $msg = new AMQPMessage($ico);
+        $json = json_encode(["userId" => $user->getId(), "ico" => $ico]);
+
+        $msg = new AMQPMessage($json);
         $channel->basic_publish($msg, '', 'ico_queue');
 
         dump(" [x] Sent '$ico'\n");
